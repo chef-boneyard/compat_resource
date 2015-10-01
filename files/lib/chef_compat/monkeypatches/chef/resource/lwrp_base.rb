@@ -1,0 +1,52 @@
+require 'chef_compat/resource'
+require 'chef/resource/lwrp_base'
+
+module ChefCompat
+  module Monkeypatches
+    # Add an empty module to Class so we can temporarily override it
+    module Class
+    end
+    class<<::Class
+      prepend(ChefCompat::Monkeypatches::Class)
+    end
+
+    module Chef
+      module Resource
+        module LWRPBase
+          def build_from_file(cookbook_name, filename, run_context)
+            # If the cookbook this LWRP is from depends on chef-compat, fix its LWRPs up real good
+            if run_context.cookbook_collection[cookbook_name].metadata.dependencies.has_key?('chef-compat')
+              # All cookbooks do Class.new(Chef::Resource::LWRPBase). Change Class.new
+              # temporarily to translate Chef::Resource::LWRPBase to ChefCompat::Resource
+              ChefCompat::MonkeyPatches::Class.define_method(:new) do |*args, &block|
+                # Trick it! Use ChefCompat::Resource instead of Chef::Resource::LWRPBase
+                if args == [ ::Chef::Resource::LWRPBase ]
+                  class<<ChefCompat::MonkeyPatches::Class
+                    remove_method(:new) if method_defined?(:new)
+                  end
+                  args = [ ChefCompat::Resource ]
+                end
+                super(*args, &block)
+              end
+
+              begin
+
+                # Call the actual build_from_file
+                super
+
+              ensure
+                class<<ChefCompat::MonkeyPatches::Class
+                  remove_method(:new) if method_defined?(:new)
+                end
+              end
+            else
+              # Call the actual build_from_file
+              super
+            end
+          end
+        end
+        ::Chef::Resource::LWRPBase.prepend(LWRPBase)
+      end
+    end
+  end
+end
