@@ -41,9 +41,7 @@ KEEP_FUNCTIONS = {
     FullDSL
   ),
   'chef/provider' => %w(
-    self.use_inline_resources
     self.include_resource_dsl
-    InlineResources
   )
 }
 # See chef_compat/resource for def. of resource_name and provider
@@ -97,7 +95,16 @@ task :update do
           line = "#{$1}chef_compat/copied_from_chef/#{$2}#{$3}"
         end
       end
-      line.sub!('class Resource', "require 'chef/resource'\nclass Resource < ::Chef::Resource")
+      # descend from the real version of the class
+      if line =~ /^(\s*class\s+)(\w+)(\s*)$/
+        if $2 == "Chef"
+          new_class = "::#{$2}"
+        else
+          new_class = "::Chef::#{$3}"
+        end
+        line = "#{$1}#{$2} < ::Chef::#{$2}#{$3}"
+      end
+
       output.puts line
     end
     # Close the ChefCompat module declaration from the top

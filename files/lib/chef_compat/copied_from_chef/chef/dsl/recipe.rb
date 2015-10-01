@@ -7,7 +7,7 @@ require 'chef/mixin/shell_out'
 require 'chef/mixin/powershell_out'
 require 'chef/dsl/resources'
 require 'chef/dsl/definitions'
-class Chef
+class Chef < ::Chef::Chef
   module DSL
     module Recipe
       module FullDSL

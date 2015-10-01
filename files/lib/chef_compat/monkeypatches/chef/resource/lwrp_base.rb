@@ -3,7 +3,11 @@ require 'chef/resource/lwrp_base'
 
 module ChefCompat
   module Monkeypatches
-    # Add an empty module to Class so we can temporarily override it
+    #
+    # NOTE: LOTS OF METAPROGRAMMING HERE. NOT FOR FAINT OF HEART.
+    #
+
+    # Add an empty module to Class so we can temporarily override it in build_from_file
     module Class
     end
     class<<::Class
@@ -18,15 +22,18 @@ module ChefCompat
             if run_context.cookbook_collection[cookbook_name].metadata.dependencies.has_key?('chef-compat')
               # All cookbooks do Class.new(Chef::Resource::LWRPBase). Change Class.new
               # temporarily to translate Chef::Resource::LWRPBase to ChefCompat::Resource
-              ChefCompat::MonkeyPatches::Class.define_method(:new) do |*args, &block|
-                # Trick it! Use ChefCompat::Resource instead of Chef::Resource::LWRPBase
-                if args == [ ::Chef::Resource::LWRPBase ]
-                  class<<ChefCompat::MonkeyPatches::Class
-                    remove_method(:new) if method_defined?(:new)
+              ChefCompat::Monkeypatches::Class.module_eval do
+                def new(*args, &block)
+                  # Trick it! Use ChefCompat::Resource instead of Chef::Resource::LWRPBase
+                  puts args.inspect
+                  if args == [ ::Chef::Resource::LWRPBase ]
+                    ChefCompat::Monkeypatches::Class.module_eval do
+                      remove_method(:new) if method_defined?(:new)
+                    end
+                    args = [ ChefCompat::Resource ]
                   end
-                  args = [ ChefCompat::Resource ]
+                  super(*args, &block)
                 end
-                super(*args, &block)
               end
 
               begin
@@ -35,7 +42,7 @@ module ChefCompat
                 super
 
               ensure
-                class<<ChefCompat::MonkeyPatches::Class
+                class<<ChefCompat::Monkeypatches::Class
                   remove_method(:new) if method_defined?(:new)
                 end
               end
@@ -45,7 +52,9 @@ module ChefCompat
             end
           end
         end
-        ::Chef::Resource::LWRPBase.prepend(LWRPBase)
+        class <<::Chef::Resource::LWRPBase
+          prepend(LWRPBase)
+        end
       end
     end
   end

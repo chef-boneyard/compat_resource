@@ -7,7 +7,7 @@ module ChefCompat
     # 2. resource_name
 
     def provider(*args, &block)
-      super || action_class
+      super || self.class.action_class
     end
     def provider=(arg)
       provider(arg)
@@ -16,7 +16,7 @@ module ChefCompat
     def self.resource_name(name=Chef::NOT_PASSED)
       # Setter
       if name != Chef::NOT_PASSED
-        remove_canonical_dsl
+#        remove_canonical_dsl
 
         # Set the resource_name and call provides
         if name
@@ -37,5 +37,15 @@ module ChefCompat
     def self.resource_name=(name)
       resource_name(name)
     end
+
+    # for LWRPBase
+    def self.run_context
+      @run_context
+    end
+    def self.run_context=(arg)
+      @run_context = arg
+    end
+    require 'chef/mixin/from_file'
+    extend Chef::Mixin::FromFile
   end
 end

@@ -18,7 +18,7 @@ module CopiedFromChef
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class Chef
+class Chef < ::Chef::Chef
   NOT_PASSED = Object.new
   def NOT_PASSED.to_s
     "NOT_PASSED"
