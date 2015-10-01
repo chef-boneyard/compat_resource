@@ -25,8 +25,8 @@ require 'chef/mixin/deprecation'
 require 'chef/mixin/provides'
 require 'chef/mixin/shell_out'
 require 'chef/mixin/powershell_out'
-class Chef < ::Chef::Chef
-  class Resource < ::Chef::Resource
+class Chef < (defined?(::Chef) ? ::Chef : Object)
+  class Resource < (defined?(::Chef::Resource) ? ::Chef::Resource : Object)
     def initialize(name, run_context=nil)
       name(name) unless name.nil?
       @run_context = run_context

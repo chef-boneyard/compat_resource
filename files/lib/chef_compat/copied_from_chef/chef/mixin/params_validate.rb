@@ -22,7 +22,7 @@ require 'chef_compat/copied_from_chef/chef/constants'
 require 'chef_compat/copied_from_chef/chef/property'
 require 'chef_compat/copied_from_chef/chef/delayed_evaluator'
 
-class Chef < ::Chef::Chef
+class Chef < (defined?(::Chef) ? ::Chef : Object)
   module Mixin
     module ParamsValidate
 

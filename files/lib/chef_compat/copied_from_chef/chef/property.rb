@@ -22,7 +22,7 @@ module CopiedFromChef
 require 'chef/exceptions'
 require 'chef_compat/copied_from_chef/chef/delayed_evaluator'
 
-class Chef < ::Chef::Chef
+class Chef < (defined?(::Chef) ? ::Chef : Object)
   #
   # Type and validation information for a property on a resource.
   #
@@ -37,7 +37,7 @@ class Chef < ::Chef::Chef
   # @see Chef::Resource.property
   # @see Chef::DelayedEvaluator
   #
-  class Property < ::Chef::Property
+  class Property < (defined?(::Chef::Property) ? ::Chef::Property : Object)
     #
     # Create a reusable property type that can be used in multiple properties
     # in different resources.

@@ -100,9 +100,9 @@ task :update do
         if $2 == "Chef"
           new_class = "::#{$2}"
         else
-          new_class = "::Chef::#{$3}"
+          new_class = "::Chef::#{$2}"
         end
-        line = "#{$1}#{$2} < ::Chef::#{$2}#{$3}"
+        line = "#{$1}#{$2} < (defined?(#{new_class}) ? #{new_class} : Object)#{$3}"
       end
 
       output.puts line

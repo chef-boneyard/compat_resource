@@ -11,8 +11,8 @@ require 'chef/mixin/provides'
 require 'chef/platform/service_helpers'
 require 'chef/node_map'
 require 'forwardable'
-class Chef < ::Chef::Chef
-  class Provider < ::Chef::Provider
+class Chef < (defined?(::Chef) ? ::Chef : Object)
+  class Provider < (defined?(::Chef::Provider) ? ::Chef::Provider : Object)
     require 'chef/mixin/why_run'
     require 'chef/mixin/shell_out'
     require 'chef/mixin/provides'

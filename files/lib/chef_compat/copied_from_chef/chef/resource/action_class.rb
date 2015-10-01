@@ -21,8 +21,8 @@ module CopiedFromChef
 
 require 'chef/exceptions'
 
-class Chef < ::Chef::Chef
-  class Resource < ::Chef::Resource
+class Chef < (defined?(::Chef) ? ::Chef : Object)
+  class Resource < (defined?(::Chef::Resource) ? ::Chef::Resource : Object)
     module ActionClass
       #
       # If load_current_value! is defined on the resource, use that.
