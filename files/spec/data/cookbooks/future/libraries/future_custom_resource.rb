@@ -1,4 +1,4 @@
-class FutureCustomResource < Chef::Resource
+class FutureCustomResource < ChefCompat::Resource
   resource_name :future_custom_resource
   property :x
   action :create do

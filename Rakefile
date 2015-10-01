@@ -4,15 +4,19 @@ require 'stove/rake_task'
 require 'fileutils'
 
 RSpec::Core::RakeTask.new(:spec) do |t|
-  t.pattern = FileList['files/spec/**/*_spec.rb'] | FileList['files/spec/*_spec.rb']
+  t.pattern = FileList['files/spec/**/*_spec.rb']
 end
 Stove::RakeTask.new
 
 task default: [ :update, :spec ]
 
 CHEF_FILES = %w(chef/constants chef/delayed_evaluator chef/property
-                chef/resource chef/resource/action_class
+                chef/resource chef/resource/action_class chef/provider chef/dsl/recipe
                 chef/mixin/params_validate)
+SPEC_FILES = %w(unit/property_spec.rb unit/property/state_spec.rb unit/property/validation_spec.rb
+                integration/recipes/resource_action_spec.rb
+                integration/recipes/resource_converge_if_changed_spec.rb
+                integration/recipes/resource_load_spec.rb)
 KEEP_FUNCTIONS = {
   'chef/resource' => %w(
     initialize
@@ -32,6 +36,14 @@ KEEP_FUNCTIONS = {
     self.load_current_value
 
     Chef::Mixin::ParamsValidate
+  ),
+  'chef/dsl/recipe' => %w(
+    FullDSL
+  ),
+  'chef/provider' => %w(
+    self.use_inline_resources
+    self.include_resource_dsl
+    InlineResources
   )
 }
 # See chef_compat/resource for def. of resource_name and provider
@@ -66,11 +78,14 @@ task :update do
         elsif line =~ /^(\s*)def\s+([A-Za-z0-9_.]+)/
           current_function = $2
           current_function_indent = $1
+        elsif line =~ /^(\s*)module\s+([A-Za-z0-9_:]+)/ && KEEP_FUNCTIONS[file].include?($2)
+          current_function = $2
+          current_function_indent = $1
         elsif line =~ /^\s*#/ || line =~ /^\s*$/
           next
         elsif line =~ /^\s*(attr_reader|attr_writer|attr_accessor|property|alias)\s*:(\w+)/ && !KEEP_FUNCTIONS[file].include?($2)
           next
-        elsif line =~ /^\s*(include|extend)\s*([A-Za-z0-9_:]+)/ && !KEEP_FUNCTIONS.include?($2)
+        elsif line =~ /^\s*(include|extend)\s*([A-Za-z0-9_:]+)/ && !KEEP_FUNCTIONS[file].include?($2)
           next
         end
         next if current_function && !KEEP_FUNCTIONS[file].include?(current_function)
@@ -97,4 +112,10 @@ task :update do
       File.open(target_file, "w") { |f| f.write(output.string) }
     end
   end
+
+  # SPEC_FILES.each do |file|
+  #   target_path = File.expand_path("../files/spec/copied_from_chef", __FILE__)
+  #   source_file = File.join(chef_gem_path, 'lib', "#{file}.rb")
+  #   target_file = File.join(target_path, "#{file}")
+  # end
 end

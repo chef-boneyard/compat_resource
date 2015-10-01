@@ -1,5 +1,4 @@
 require 'chef_compat/copied_from_chef/chef/resource'
-require 'chef_compat/copied_from_chef/chef/constants'
 
 module ChefCompat
   class Resource < ChefCompat::CopiedFromChef::Chef::Resource
@@ -14,9 +13,9 @@ module ChefCompat
       provider(arg)
     end
 
-    def self.resource_name(name=NOT_PASSED)
+    def self.resource_name(name=Chef::NOT_PASSED)
       # Setter
-      if name != NOT_PASSED
+      if name != Chef::NOT_PASSED
         remove_canonical_dsl
 
         # Set the resource_name and call provides

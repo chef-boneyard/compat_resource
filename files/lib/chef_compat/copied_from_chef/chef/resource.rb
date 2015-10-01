@@ -103,6 +103,7 @@ class Resource < ::Chef::Resource
       return result.values.first if identity_properties.size == 1
       result
     end
+    include Chef::Mixin::ParamsValidate
     def self.property(name, type=NOT_PASSED, **options)
       name = name.to_sym
 
