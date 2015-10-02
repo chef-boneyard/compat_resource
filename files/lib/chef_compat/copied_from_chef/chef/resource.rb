@@ -1,5 +1,6 @@
 require 'chef_compat/copied_from_chef'
-module ChefCompat
+class Chef
+module ::ChefCompat
 module CopiedFromChef
 require 'chef_compat/copied_from_chef/chef/mixin/params_validate'
 require 'chef_compat/copied_from_chef/chef/resource/action_class'
@@ -278,6 +279,7 @@ class Chef < (defined?(::Chef) ? ::Chef : Object)
     @@sorted_descendants = nil
     private
   end
+end
 end
 end
 end

@@ -1,5 +1,6 @@
 require 'chef_compat/copied_from_chef'
-module ChefCompat
+class Chef
+module ::ChefCompat
 module CopiedFromChef
 class Chef < (defined?(::Chef) ? ::Chef : Object)
   class Provider < (defined?(::Chef::Provider) ? ::Chef::Provider : Object)
@@ -96,6 +97,7 @@ class Chef < (defined?(::Chef) ? ::Chef : Object)
     end
     protected
   end
+end
 end
 end
 end

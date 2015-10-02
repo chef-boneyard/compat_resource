@@ -1,5 +1,6 @@
 require 'chef_compat/copied_from_chef'
-module ChefCompat
+class Chef
+module ::ChefCompat
 module CopiedFromChef
 #
 # Author:: Adam Jacob (<adam@opscode.com>)
@@ -479,6 +480,7 @@ class Chef < (defined?(::Chef) ? ::Chef : Object)
       end
     end
   end
+end
 end
 end
 end

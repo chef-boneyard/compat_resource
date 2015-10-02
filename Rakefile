@@ -71,7 +71,8 @@ task :update do
     output = StringIO.new
     # Wrap the whole thing in a ChefCompat module
     output.puts "require 'chef_compat/copied_from_chef'"
-    output.puts "module ChefCompat"
+    output.puts "class Chef"
+    output.puts "module ::ChefCompat"
     output.puts "module CopiedFromChef"
 
     # Bring over the Chef file
@@ -170,6 +171,7 @@ task :update do
       output.puts line
     end
     # Close the ChefCompat module declaration from the top
+    output.puts "end"
     output.puts "end"
     output.puts "end"
 

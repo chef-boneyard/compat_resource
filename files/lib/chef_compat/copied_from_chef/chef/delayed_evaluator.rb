@@ -1,5 +1,6 @@
 require 'chef_compat/copied_from_chef'
-module ChefCompat
+class Chef
+module ::ChefCompat
 module CopiedFromChef
 #
 # Author:: John Keiser <jkeiser@chef.io>
@@ -21,6 +22,7 @@ module CopiedFromChef
 class Chef < (defined?(::Chef) ? ::Chef : Object)
   class DelayedEvaluator < (defined?(::Chef::DelayedEvaluator) ? ::Chef::DelayedEvaluator : Proc)
   end
+end
 end
 end
 end
