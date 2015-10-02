@@ -3,6 +3,11 @@ require 'chef_compat/copied_from_chef/chef/resource'
 
 module ChefCompat
   class Resource < ChefCompat::CopiedFromChef::Chef::Resource
+    def initialize(*args, &block)
+      super
+      # @resource_name is used in earlier Chef versions
+      @resource_name = self.class.resource_name
+    end
     # Things we'll need to define ourselves:
     # 1. provider
     # 2. resource_name
