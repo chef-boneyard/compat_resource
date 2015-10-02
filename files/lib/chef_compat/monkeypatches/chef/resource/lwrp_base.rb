@@ -18,8 +18,8 @@ module ChefCompat
       module Resource
         module LWRPBase
           def build_from_file(cookbook_name, filename, run_context)
-            # If the cookbook this LWRP is from depends on chef-compat, fix its LWRPs up real good
-            if run_context.cookbook_collection[cookbook_name].metadata.dependencies.has_key?('chef-compat')
+            # If the cookbook this LWRP is from depends on compat_resource, fix its LWRPs up real good
+            if run_context.cookbook_collection[cookbook_name].metadata.dependencies.has_key?('compat_resource')
               # All cookbooks do Class.new(Chef::Resource::LWRPBase). Change Class.new
               # temporarily to translate Chef::Resource::LWRPBase to ChefCompat::Resource
               ChefCompat::Monkeypatches::Class.module_eval do

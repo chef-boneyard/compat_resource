@@ -1,13 +1,13 @@
 require 'tmpdir'
 
-describe "chef-compat cookbook" do
+describe "compat_resource cookbook" do
   let(:chef_repo_path) { Dir.mktmpdir }
   let(:cookbooks_path) { path = File.join(chef_repo_path, 'cookbooks'); Dir.mkdir(path); path }
   before do
     File.symlink(File.expand_path('../data/config.rb', __FILE__),
                  File.join(chef_repo_path, 'config.rb'))
     File.symlink(File.expand_path('../../..', __FILE__),
-                 File.join(cookbooks_path, 'chef-compat'))
+                 File.join(cookbooks_path, 'compat_resource'))
     File.symlink(File.expand_path('../data/cookbooks/test', __FILE__),
                  File.join(cookbooks_path, 'test'))
     File.symlink(File.expand_path('../data/cookbooks/future', __FILE__),

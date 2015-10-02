@@ -1,4 +1,4 @@
 name "future"
-description "cookbook that depends on chef-compat"
+description "cookbook that depends on compat_resource"
 version "1.0.0"
-depends "chef-compat"
+depends "compat_resource"

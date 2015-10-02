@@ -1,6 +1,6 @@
 $:.unshift File.expand_path('../files/lib', __FILE__)
 project = File.basename(__FILE__)[0..-'.gemspec'.length-1]
-require "#{project.sub('-', '_')}/version"
+require "chef_compat/version"
 
 Gem::Specification.new do |s|
   s.name = project

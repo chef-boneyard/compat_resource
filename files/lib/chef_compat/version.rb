@@ -1,3 +1,3 @@
 module ChefCompat
-  VERSION = '1.0.0'
+  VERSION = '12.5.0'
 end

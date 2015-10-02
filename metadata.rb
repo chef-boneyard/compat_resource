@@ -1,4 +1,4 @@
-name "chef-compat"
-description "Backwards Porting for some Chef Features"
+name "compat_resource"
+description "Chef 12.5 Resources, For Chef 12.1-12.4"
 require_relative 'files/lib/chef_compat/version'
 version ChefCompat::VERSION
