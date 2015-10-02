@@ -8,8 +8,11 @@ RSpec::Core::RakeTask.new(:spec) do |t|
 end
 Stove::RakeTask.new
 
-task default: [ :update, :spec ]
+task default: :spec
 
+#
+# "rake update" updates the copied_from_chef files so we can grab bugfixes or new features
+#
 CHEF_FILES = %w(chef/constants chef/delayed_evaluator chef/property
                 chef/resource chef/resource/action_class chef/provider chef/dsl/recipe
                 chef/mixin/params_validate)
