@@ -19,7 +19,6 @@ module CopiedFromChef
 # limitations under the License.
 #
 
-require 'chef/exceptions'
 
 class Chef < (defined?(::Chef) ? ::Chef : Object)
   class Resource < (defined?(::Chef::Resource) ? ::Chef::Resource : Object)

@@ -43,13 +43,20 @@ KEEP_FUNCTIONS = {
     self.use_inline_resources
     self.include_resource_dsl
     self.include_resource_dsl_module
-  )
+  ),
 }
 KEEP_INCLUDES = {
 }
 KEEP_CLASSES = {
   'chef/provider' => %w(Chef::Provider),
-  'chef/recipe/dsl' => %w(Chef::Recipe::DSL::FullDSL),
+  'chef/dsl/recipe' => %w(Chef::Recipe::DSL::FullDSL),
+}
+SKIP_LINES = {
+  'chef/resource' => [ /include Chef::Mixin::PowershellOut/ ],
+  'chef/provider' => [ /include Chef::Mixin::PowershellOut/, /extend DeprecatedLWRPClass/ ],
+  'chef/dsl/recipe' => [ /include Chef::Mixin::PowershellOut/ ]
+}
+PROCESS_LINES = {
 }
 # See chef_compat/resource for def. of resource_name and provider
 # See chef_compat/monkeypatches/chef/resource for def. of current_value
@@ -86,29 +93,31 @@ task :update do
         case line
 
         # Skip modules and classes that aren't part of our list
-        when /^(\s*)def\s+([A-Za-z0-9_.]+)/
+        when /\A(\s*)def\s+([A-Za-z0-9_.]+)/
           if KEEP_FUNCTIONS[file] && !KEEP_FUNCTIONS[file].include?($2)
-            skip_until = /^#{$1}end\s*$/
+            skip_until = /\A#{$1}end\s*$/
             next
           else
             # Keep everything inside a function no matter what it is
-            keep_until = /^#{$1}end\s*$/
+            keep_until = /\A#{$1}end\s*$/
           end
 
         # Skip comments and whitespace if we're narrowing the file (otherwise it
         # looks super weird)
-        when /^\s*#/, /^\s*$/
+        when /\A\s*#/, /\A\s*$/
           next if KEEP_CLASSES[file] || KEEP_FUNCTIONS[file]
 
         # Skip aliases/attrs/properties that we're not keeping
-        when /^\s*(attr_reader|attr_writer|attr_accessor|property|alias)\s*:(\w+)/
+        when /\A\s*(attr_reader|attr_writer|attr_accessor|property|alias)\s*:(\w+)/
           next if KEEP_FUNCTIONS[file] && !KEEP_FUNCTIONS[file].include?($2)
 
         # Skip includes and extends that we're not keeping
-        when /^\s*(include|extend)\s*([A-Za-z0-9_:]+)/
+        when /\A\s*(include|extend)\s*([A-Za-z0-9_:]+)/
           next if KEEP_INCLUDES[file] && !KEEP_INCLUDES[file].include?($2)
 
         end
+
+        next if SKIP_LINES[file] && SKIP_LINES[file].any? { |skip| skip === line }
       end
 
       # If we are at the end of a class, pop in_class
@@ -118,10 +127,10 @@ task :update do
         next if KEEP_CLASSES[file] && !KEEP_CLASSES[file].any? { |c| c.start_with?(class_name) }
 
       # Detect class open
-    elsif line =~ /^(\s*)(class|module)(\s+)([A-Za-z0-9_:]+)(\s*<\s*([A-Za-z0-9_:]+))?.*$/
+      elsif line =~ /\A(\s*)(class|module)(\s+)([A-Za-z0-9_:]+)(\s*<\s*([A-Za-z0-9_:]+))?.*$/
         indent, type, space, class_name, _, superclass_name = $1, $2, $3, $4, $5, $6
         full_class_name = in_class[-1] ? "#{in_class[-1][:name]}::#{class_name}" : class_name
-        in_class << { name: full_class_name, until: /^#{indent}end\s*$/ }
+        in_class << { name: full_class_name, until: /\A#{indent}end\s*$/ }
         superclass_name ||= "Object"
 
         # Don't print the class open unless it contains stuff we'll keep
@@ -146,11 +155,15 @@ task :update do
       end
 
       # Modify requires to overridden files to bring in the local version
-      if line =~ /^(\s*require\s*['"])(.+)(['"]\s*)$/
+      if line =~ /\A(\s*require\s*['"])(.+)(['"]\s*)$/
         if CHEF_FILES.include?($2)
           line = "#{$1}chef_compat/copied_from_chef/#{$2}#{$3}"
+        else
+          next
         end
       end
+
+      line = PROCESS_LINES[file].call(line) if PROCESS_LINES[file]
 
       output.puts line
     end

@@ -1,30 +1,8 @@
 require 'chef_compat/copied_from_chef'
 module ChefCompat
 module CopiedFromChef
-require 'chef/exceptions'
 require 'chef_compat/copied_from_chef/chef/mixin/params_validate'
-require 'chef/dsl/platform_introspection'
-require 'chef/dsl/data_query'
-require 'chef/dsl/registry_helper'
-require 'chef/dsl/reboot_pending'
-require 'chef/dsl/resources'
-require 'chef/mixin/convert_to_class_name'
-require 'chef/guard_interpreter/resource_guard_interpreter'
-require 'chef/resource/conditional'
-require 'chef/resource/conditional_action_not_nothing'
 require 'chef_compat/copied_from_chef/chef/resource/action_class'
-require 'chef/resource_collection'
-require 'chef/node_map'
-require 'chef/node'
-require 'chef/platform'
-require 'chef/resource/resource_notification'
-require 'chef/provider_resolver'
-require 'chef/resource_resolver'
-require 'set'
-require 'chef/mixin/deprecation'
-require 'chef/mixin/provides'
-require 'chef/mixin/shell_out'
-require 'chef/mixin/powershell_out'
 class Chef < (defined?(::Chef) ? ::Chef : Object)
   class Resource < (defined?(::Chef::Resource) ? ::Chef::Resource : Object)
     include Chef::DSL::DataQuery
@@ -33,7 +11,6 @@ class Chef < (defined?(::Chef) ? ::Chef : Object)
     include Chef::DSL::RebootPending
     extend Chef::Mixin::Provides
     include Chef::Mixin::ShellOut
-    include Chef::Mixin::PowershellOut
     def initialize(name, run_context=nil)
       name(name) unless name.nil?
       @run_context = run_context
@@ -308,6 +285,5 @@ class Chef < (defined?(::Chef) ? ::Chef : Object)
     private
   end
 end
-require 'chef/chef_class'
 end
 end

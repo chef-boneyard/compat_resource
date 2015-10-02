@@ -1,24 +1,10 @@
 require 'chef_compat/copied_from_chef'
 module ChefCompat
 module CopiedFromChef
-require 'chef/mixin/from_file'
-require 'chef/mixin/convert_to_class_name'
-require 'chef/mixin/enforce_ownership_and_permissions'
-require 'chef/mixin/why_run'
-require 'chef/mixin/shell_out'
-require 'chef/mixin/powershell_out'
-require 'chef/mixin/provides'
-require 'chef/platform/service_helpers'
-require 'chef/node_map'
-require 'forwardable'
 class Chef < (defined?(::Chef) ? ::Chef : Object)
   class Provider < (defined?(::Chef::Provider) ? ::Chef::Provider : Object)
-    require 'chef/mixin/why_run'
-    require 'chef/mixin/shell_out'
-    require 'chef/mixin/provides'
     include Chef::Mixin::WhyRun
     include Chef::Mixin::ShellOut
-    include Chef::Mixin::PowershellOut
     extend Chef::Mixin::Provides
     def initialize(new_resource, run_context)
       @new_resource = new_resource
@@ -112,12 +98,7 @@ class Chef < (defined?(::Chef) ? ::Chef : Object)
       include InlineResources
     end
     protected
-    extend DeprecatedLWRPClass
   end
 end
-require 'chef/chef_class'
-require 'chef/mixin/why_run'
-require 'chef/resource_collection'
-require 'chef/runner'
 end
 end

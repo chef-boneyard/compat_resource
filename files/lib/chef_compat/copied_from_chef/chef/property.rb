@@ -19,7 +19,6 @@ module CopiedFromChef
 # limitations under the License.
 #
 
-require 'chef/exceptions'
 require 'chef_compat/copied_from_chef/chef/delayed_evaluator'
 
 class Chef < (defined?(::Chef) ? ::Chef : Object)
