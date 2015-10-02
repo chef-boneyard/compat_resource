@@ -36,8 +36,12 @@ end
 
 action :create do
   converge_if_changed do
+    Globals.exists = true
     Globals.global_x = x
     Globals.global_y = y
+  end
+  file ::File.expand_path('~/x.txt') do
+    content 'hi'
   end
 end
 

@@ -14,7 +14,7 @@ task default: :spec
 # "rake update" updates the copied_from_chef files so we can grab bugfixes or new features
 #
 CHEF_FILES = %w(chef/constants chef/delayed_evaluator chef/property
-                chef/resource chef/resource/action_class chef/provider chef/dsl/recipe
+                chef/resource chef/resource/action_class chef/provider
                 chef/mixin/params_validate)
 SPEC_FILES = %w(unit/property_spec.rb unit/property/state_spec.rb unit/property/validation_spec.rb
                 integration/recipes/resource_action_spec.rb
@@ -53,8 +53,7 @@ KEEP_INCLUDES = {
   'chef/provider' => [],
 }
 KEEP_CLASSES = {
-  'chef/provider' => %w(Chef::Provider),
-  'chef/dsl/recipe' => %w(Chef::Recipe::DSL::FullDSL),
+  'chef/provider' => %w(Chef::Provider)
 }
 SKIP_LINES = {
   'chef/dsl/recipe' => [ /include Chef::Mixin::PowershellOut/ ]
