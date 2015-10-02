@@ -150,6 +150,7 @@ class Chef < (defined?(::Chef) ? ::Chef : Object)
     def self.property_type(**options)
       Property.derive(**options)
     end
+    property :name, String, coerce: proc { |v| v.is_a?(Array) ? v.join(', ') : v.to_s }, desired_state: false
     def property_is_set?(name)
       property = self.class.properties[name.to_sym]
       raise ArgumentError, "Property #{name} is not defined in class #{self}" if !property

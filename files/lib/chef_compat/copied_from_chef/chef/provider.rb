@@ -31,6 +31,44 @@ class Chef < (defined?(::Chef) ? ::Chef : Object)
       @cookbook_name = nil
       self.class.include_resource_dsl_module(new_resource)
     end
+    def converge_if_changed(*properties, &converge_block)
+      if !converge_block
+        raise ArgumentError, "converge_if_changed must be passed a block!"
+      end
+
+      properties = new_resource.class.state_properties.map { |p| p.name } if properties.empty?
+      properties = properties.map { |p| p.to_sym }
+      if current_resource
+        # Collect the list of modified properties
+        specified_properties = properties.select { |property| new_resource.property_is_set?(property) }
+        modified = specified_properties.select { |p| new_resource.send(p) != current_resource.send(p) }
+        if modified.empty?
+          Chef::Log.debug("Skipping update of #{new_resource.to_s}: has not changed any of the specified properties #{specified_properties.map { |p| "#{p}=#{new_resource.send(p).inspect}" }.join(", ")}.")
+          return false
+        end
+
+        # Print the pretty green text and run the block
+        property_size = modified.map { |p| p.size }.max
+        modified = modified.map { |p| "  set #{p.to_s.ljust(property_size)} to #{new_resource.send(p).inspect} (was #{current_resource.send(p).inspect})" }
+        converge_by([ "update #{current_resource.identity}" ] + modified, &converge_block)
+
+      else
+        # The resource doesn't exist. Mark that we are *creating* this, and
+        # write down any properties we are setting.
+        property_size = properties.map { |p| p.size }.max
+        created = []
+        properties.each do |property|
+          if new_resource.property_is_set?(property)
+            created << "  set #{property.to_s.ljust(property_size)} to #{new_resource.send(property).inspect}"
+          else
+            created << "  set #{property.to_s.ljust(property_size)} to #{new_resource.send(property).inspect} (default value)"
+          end
+        end
+
+        converge_by([ "create #{new_resource.identity}" ] + created, &converge_block)
+      end
+      true
+    end
     def self.include_resource_dsl(include_resource_dsl)
       @include_resource_dsl = include_resource_dsl
     end

@@ -21,6 +21,8 @@ KEEP_FUNCTIONS = {
   'chef/resource' => %w(
     initialize
 
+    name
+
     resource_name self.use_automatic_resource_name
 
     identity state state_for_resource_reporter property_is_set reset_property
@@ -37,6 +39,7 @@ KEEP_FUNCTIONS = {
   ),
   'chef/provider' => %w(
     initialize
+    converge_if_changed
     self.use_inline_resources
     self.include_resource_dsl
     self.include_resource_dsl_module
