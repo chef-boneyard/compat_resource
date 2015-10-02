@@ -1,5 +1,3 @@
-require 'chef/chef_class'
-
 class Chef
   NOT_PASSED = Object.new if !defined?(NOT_PASSED)
   # Earlier versions of Chef didn't have this message
