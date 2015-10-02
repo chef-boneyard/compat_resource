@@ -247,6 +247,9 @@ class Chef < (defined?(::Chef) ? ::Chef : Object)
     def self.load_current_value(&load_block)
       define_method(:load_current_value!, &load_block)
     end
+    def current_value_does_not_exist!
+      raise Chef::Exceptions::CurrentValueDoesNotExist
+    end
     def self.action_class
       @action_class ||
         # If the superclass needed one, then we need one as well.
