@@ -5,6 +5,7 @@ module CopiedFromChef
 class Chef < (defined?(::Chef) ? ::Chef : Object)
   class Provider < (defined?(::Chef::Provider) ? ::Chef::Provider : Object)
     def initialize(new_resource, run_context)
+super if defined?(::Chef::Provider)
       @new_resource = new_resource
       @action = action
       @current_resource = nil

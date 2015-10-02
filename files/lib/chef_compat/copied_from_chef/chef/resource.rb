@@ -7,6 +7,7 @@ require 'chef_compat/copied_from_chef/chef/resource/action_class'
 class Chef < (defined?(::Chef) ? ::Chef : Object)
   class Resource < (defined?(::Chef::Resource) ? ::Chef::Resource : Object)
     def initialize(name, run_context=nil)
+super if defined?(::Chef::Resource)
       name(name) unless name.nil?
       @run_context = run_context
       @noop = nil

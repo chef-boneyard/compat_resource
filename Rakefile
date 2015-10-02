@@ -101,6 +101,7 @@ task :update do
             skip_until = /\A#{$1}end\s*$/
             next
           else
+            function = $2
             # Keep everything inside a function no matter what it is
             keep_until = /\A#{$1}end\s*$/
           end
@@ -169,6 +170,11 @@ task :update do
       line = PROCESS_LINES[file].call(line) if PROCESS_LINES[file]
 
       output.puts line
+
+      # If this was the header for an initialize function, write out "super"
+      if function == 'initialize'
+        output.puts "super if defined?(::#{in_class[-1][:name]})"
+      end
     end
     # Close the ChefCompat module declaration from the top
     output.puts "end"

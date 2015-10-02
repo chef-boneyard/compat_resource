@@ -88,6 +88,7 @@ class Chef < (defined?(::Chef) ? ::Chef : Object)
     #     is fully initialized.
     #
     def initialize(**options)
+super if defined?(::Chef::Property)
       options.each { |k,v| options[k.to_sym] = v if k.is_a?(String) }
 
       # Replace name_attribute with name_property
