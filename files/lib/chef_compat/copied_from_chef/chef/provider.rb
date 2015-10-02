@@ -3,9 +3,6 @@ module ChefCompat
 module CopiedFromChef
 class Chef < (defined?(::Chef) ? ::Chef : Object)
   class Provider < (defined?(::Chef::Provider) ? ::Chef::Provider : Object)
-    include Chef::Mixin::WhyRun
-    include Chef::Mixin::ShellOut
-    extend Chef::Mixin::Provides
     def initialize(new_resource, run_context)
       @new_resource = new_resource
       @action = action

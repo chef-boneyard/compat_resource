@@ -46,14 +46,14 @@ KEEP_FUNCTIONS = {
   ),
 }
 KEEP_INCLUDES = {
+  'chef/resource' => %w(Chef::Mixin::ParamsValidate),
+  'chef/provider' => [],
 }
 KEEP_CLASSES = {
   'chef/provider' => %w(Chef::Provider),
   'chef/dsl/recipe' => %w(Chef::Recipe::DSL::FullDSL),
 }
 SKIP_LINES = {
-  'chef/resource' => [ /include Chef::Mixin::PowershellOut/ ],
-  'chef/provider' => [ /include Chef::Mixin::PowershellOut/, /extend DeprecatedLWRPClass/ ],
   'chef/dsl/recipe' => [ /include Chef::Mixin::PowershellOut/ ]
 }
 PROCESS_LINES = {
