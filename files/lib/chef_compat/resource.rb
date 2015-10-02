@@ -1,3 +1,4 @@
+require 'chef_compat/monkeypatches'
 require 'chef_compat/copied_from_chef/chef/resource'
 
 module ChefCompat
