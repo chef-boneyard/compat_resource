@@ -27,6 +27,13 @@ require 'chef/mixin/shell_out'
 require 'chef/mixin/powershell_out'
 class Chef < (defined?(::Chef) ? ::Chef : Object)
   class Resource < (defined?(::Chef::Resource) ? ::Chef::Resource : Object)
+    include Chef::DSL::DataQuery
+    include Chef::DSL::PlatformIntrospection
+    include Chef::DSL::RegistryHelper
+    include Chef::DSL::RebootPending
+    extend Chef::Mixin::Provides
+    include Chef::Mixin::ShellOut
+    include Chef::Mixin::PowershellOut
     def initialize(name, run_context=nil)
       name(name) unless name.nil?
       @run_context = run_context
@@ -103,6 +110,7 @@ class Chef < (defined?(::Chef) ? ::Chef : Object)
       result
     end
     include Chef::Mixin::ParamsValidate
+    include Chef::Mixin::Deprecation
     def self.property(name, type=NOT_PASSED, **options)
       name = name.to_sym
 
@@ -291,6 +299,8 @@ class Chef < (defined?(::Chef) ? ::Chef : Object)
     end
     FORBIDDEN_IVARS = [:@run_context, :@not_if, :@only_if, :@enclosing_provider]
     HIDDEN_IVARS = [:@allowed_actions, :@resource_name, :@source_line, :@run_context, :@name, :@not_if, :@only_if, :@elapsed_time, :@enclosing_provider]
+    include Chef::Mixin::ConvertToClassName
+    extend Chef::Mixin::ConvertToClassName
     class << self
     end
     @@sorted_descendants = nil

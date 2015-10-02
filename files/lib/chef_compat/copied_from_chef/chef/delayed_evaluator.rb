@@ -19,7 +19,7 @@ module CopiedFromChef
 # limitations under the License.
 
 class Chef < (defined?(::Chef) ? ::Chef : Object)
-  class DelayedEvaluator < Proc
+  class DelayedEvaluator < (defined?(::Chef::DelayedEvaluator) ? ::Chef::DelayedEvaluator : Proc)
   end
 end
 end

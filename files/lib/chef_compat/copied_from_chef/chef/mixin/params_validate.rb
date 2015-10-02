@@ -24,7 +24,17 @@ require 'chef_compat/copied_from_chef/chef/delayed_evaluator'
 
 class Chef < (defined?(::Chef) ? ::Chef : Object)
   module Mixin
+    if defined?(::Chef::Mixin)
+      require 'chef_compat/delegating_class'
+      extend DelegatingClass
+      @delegates_to = ::Chef::Mixin
+    end
     module ParamsValidate
+      if defined?(::Chef::Mixin::ParamsValidate)
+        require 'chef_compat/delegating_class'
+        extend DelegatingClass
+        @delegates_to = ::Chef::Mixin::ParamsValidate
+      end
 
       # Takes a hash of options, along with a map to validate them.  Returns the original
       # options hash, plus any changes that might have been made (through things like setting
@@ -448,7 +458,7 @@ class Chef < (defined?(::Chef) ? ::Chef : Object)
       # Used by #set_or_return to avoid emitting a deprecation warning for
       # "value nil" and to keep default stickiness working exactly the same
       # @api private
-      class SetOrReturnProperty < Chef::Property
+      class SetOrReturnProperty < (defined?(::Chef::Mixin::ParamsValidate::SetOrReturnProperty) ? ::Chef::Mixin::ParamsValidate::SetOrReturnProperty : Chef::Property)
         def get(resource)
           value = super
           # All values are sticky, frozen or not

@@ -24,6 +24,11 @@ require 'chef/exceptions'
 class Chef < (defined?(::Chef) ? ::Chef : Object)
   class Resource < (defined?(::Chef::Resource) ? ::Chef::Resource : Object)
     module ActionClass
+      if defined?(::Chef::Resource::ActionClass)
+        require 'chef_compat/delegating_class'
+        extend DelegatingClass
+        @delegates_to = ::Chef::Resource::ActionClass
+      end
       #
       # If load_current_value! is defined on the resource, use that.
       #
@@ -66,6 +71,11 @@ class Chef < (defined?(::Chef) ? ::Chef : Object)
       end
 
       module ClassMethods
+        if defined?(::Chef::Resource::ActionClass::ClassMethods)
+          require 'chef_compat/delegating_class'
+          extend DelegatingClass
+          @delegates_to = ::Chef::Resource::ActionClass::ClassMethods
+        end
         #
         # The Chef::Resource class this ActionClass was declared against.
         #

@@ -34,15 +34,19 @@ KEEP_FUNCTIONS = {
 
     load_current_value current_value_does_not_exist!
     self.load_current_value
-
-    Chef::Mixin::ParamsValidate
-  ),
-  'chef/dsl/recipe' => %w(
-    FullDSL
   ),
   'chef/provider' => %w(
+    initialize
+    self.use_inline_resources
     self.include_resource_dsl
+    self.include_resource_dsl_module
   )
+}
+KEEP_INCLUDES = {
+}
+KEEP_CLASSES = {
+  'chef/provider' => %w(Chef::Provider),
+  'chef/recipe/dsl' => %w(Chef::Recipe::DSL::FullDSL),
 }
 # See chef_compat/resource for def. of resource_name and provider
 # See chef_compat/monkeypatches/chef/resource for def. of current_value
@@ -60,33 +64,82 @@ task :update do
 
     # Bring over the Chef file
     chef_contents = IO.read(File.join(chef_gem_path, 'lib', "#{file}.rb"))
-    current_function = nil
-    current_function_indent = nil
+    skip_until = nil
+    keep_until = nil
+    in_class = []
     chef_contents.lines.each do |line|
-      # If this file only keeps certain functions, detect which function we are
-      # in and only keep those. Also strip comments outside functions
-      if KEEP_FUNCTIONS[file]
-        if current_function
-          if line =~ /^#{current_function_indent}end\b/
-            was_keeper = KEEP_FUNCTIONS[file].include?(current_function)
-            current_function = nil
-            current_function_indent = nil
-            next if !was_keeper
-          end
-        elsif line =~ /^(\s*)def\s+([A-Za-z0-9_.]+)/
-          current_function = $2
-          current_function_indent = $1
-        elsif line =~ /^(\s*)module\s+([A-Za-z0-9_:]+)/ && KEEP_FUNCTIONS[file].include?($2)
-          current_function = $2
-          current_function_indent = $1
-        elsif line =~ /^\s*#/ || line =~ /^\s*$/
-          next
-        elsif line =~ /^\s*(attr_reader|attr_writer|attr_accessor|property|alias)\s*:(\w+)/ && !KEEP_FUNCTIONS[file].include?($2)
-          next
-        elsif line =~ /^\s*(include|extend)\s*([A-Za-z0-9_:]+)/ && !KEEP_FUNCTIONS[file].include?($2)
+      if keep_until
+        keep_until = nil if keep_until === line
+      else
+
+        if skip_until
+          skip_until = nil if skip_until === line
           next
         end
-        next if current_function && !KEEP_FUNCTIONS[file].include?(current_function)
+
+        # If this file only keeps certain functions, detect which function we are
+        # in and only keep those. Also strip comments outside functions
+
+        case line
+
+        # Skip modules and classes that aren't part of our list
+        when /^(\s*)def\s+([A-Za-z0-9_.]+)/
+          if KEEP_FUNCTIONS[file] && !KEEP_FUNCTIONS[file].include?($2)
+            skip_until = /^#{$1}end\s*$/
+            next
+          else
+            # Keep everything inside a function no matter what it is
+            keep_until = /^#{$1}end\s*$/
+          end
+
+        # Skip comments and whitespace if we're narrowing the file (otherwise it
+        # looks super weird)
+        when /^\s*#/, /^\s*$/
+          next if KEEP_CLASSES[file] || KEEP_FUNCTIONS[file]
+
+        # Skip aliases/attrs/properties that we're not keeping
+        when /^\s*(attr_reader|attr_writer|attr_accessor|property|alias)\s*:(\w+)/
+          next if KEEP_FUNCTIONS[file] && !KEEP_FUNCTIONS[file].include?($2)
+
+        # Skip includes and extends that we're not keeping
+        when /^\s*(include|extend)\s*([A-Za-z0-9_:]+)/
+          next if KEEP_INCLUDES[file] && !KEEP_INCLUDES[file].include?($2)
+
+        end
+      end
+
+      # If we are at the end of a class, pop in_class
+      if in_class[-1] && in_class[-1][:until].match(line)
+        class_name = in_class.pop[:name]
+        # Don't bother printing classes/modules that we're not going to print anything under
+        next if KEEP_CLASSES[file] && !KEEP_CLASSES[file].any? { |c| c.start_with?(class_name) }
+
+      # Detect class open
+    elsif line =~ /^(\s*)(class|module)(\s+)([A-Za-z0-9_:]+)(\s*<\s*([A-Za-z0-9_:]+))?.*$/
+        indent, type, space, class_name, _, superclass_name = $1, $2, $3, $4, $5, $6
+        full_class_name = in_class[-1] ? "#{in_class[-1][:name]}::#{class_name}" : class_name
+        in_class << { name: full_class_name, until: /^#{indent}end\s*$/ }
+        superclass_name ||= "Object"
+
+        # Don't print the class open unless it contains stuff we'll keep
+        next if KEEP_CLASSES[file] && !KEEP_CLASSES[file].any? { |c| c.start_with?(full_class_name) }
+
+        # Fix the class to extend from its parent
+        original_class = "::#{full_class_name}"
+        if type == 'class'
+          line = "#{indent}#{type}#{space}#{class_name} < (defined?(#{original_class}) ? #{original_class} : #{superclass_name})"
+        else
+          # Modules have a harder time of it because of self methods
+          line += "#{indent}  if defined?(#{original_class})\n"
+          line += "#{indent}    require 'chef_compat/delegating_class'\n"
+          line += "#{indent}    extend DelegatingClass\n"
+          line += "#{indent}    @delegates_to = #{original_class}\n"
+          line += "#{indent}  end"
+        end
+
+      # If we're not in a class we care about, don't print stuff
+      elsif KEEP_CLASSES[file] && in_class[-1] && !KEEP_CLASSES[file].any? { |c| c == in_class[-1][:name] }
+        next
       end
 
       # Modify requires to overridden files to bring in the local version
@@ -94,15 +147,6 @@ task :update do
         if CHEF_FILES.include?($2)
           line = "#{$1}chef_compat/copied_from_chef/#{$2}#{$3}"
         end
-      end
-      # descend from the real version of the class
-      if line =~ /^(\s*class\s+)(\w+)(\s*)$/
-        if $2 == "Chef"
-          new_class = "::#{$2}"
-        else
-          new_class = "::Chef::#{$2}"
-        end
-        line = "#{$1}#{$2} < (defined?(#{new_class}) ? #{new_class} : Object)#{$3}"
       end
 
       output.puts line
