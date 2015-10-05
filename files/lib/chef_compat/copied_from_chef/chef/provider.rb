@@ -62,7 +62,7 @@ super if defined?(::Chef::Provider)
         provider_class = self
         @included_resource_dsl_module = Module.new do
           extend Forwardable
-          define_singleton_method(:to_s) { "#{resource_class} forwarder module" }
+          define_singleton_method(:to_s) { "forwarder module for #{provider_class}" }
           define_singleton_method(:inspect) { to_s }
           # Add a delegator for each explicit property that will get the *current* value
           # of the property by default instead of the *actual* value.
