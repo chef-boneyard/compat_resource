@@ -483,6 +483,8 @@ super if defined?(::Chef::Property)
     # A type accepts nil explicitly if "is" allows nil, it validates as nil, *and* is not simply
     # an empty type.
     #
+    # A type is presumed to accept nil if it does coercion (which must handle nil).
+    #
     # These examples accept nil explicitly:
     # ```ruby
     # property :a, [ String, nil ]
@@ -514,7 +516,8 @@ super if defined?(::Chef::Property)
     #
     # @api private
     def explicitly_accepts_nil?(resource)
-      options.has_key?(:is) && resource.send(:_pv_is, { name => nil }, name, options[:is], raise_error: false)
+      options.has_key?(:coerce) ||
+      (options.has_key?(:is) && resource.send(:_pv_is, { name => nil }, name, options[:is], raise_error: false))
     end
 
     def get_value(resource)
