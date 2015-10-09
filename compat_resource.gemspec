@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.name = project
   s.version = ChefCompat::VERSION
   s.platform = Gem::Platform::RUBY
-  s.summary = 'Bring some new features of Chef to older versions'
+  s.summary = 'Bring some new features of Chef 12.5 to previous 12.X releases'
   s.description = s.summary
   s.author = 'John Keiser'
   s.email = 'john@johnkeiser.com'
