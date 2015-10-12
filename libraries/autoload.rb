@@ -1,9 +1,22 @@
-# FIRST! Since this is both a gem and a cookbook, check whether the gem has already been loaded.
-# If it has already been loaded, we have a conflict. Instruct the user to put compat_resource
-# earlier in the run list.
-if defined?(ChefCompat)
-  Chef::Log.warn "ChefCompat already loaded as a gem! The gem will be used instead of the cookbook."
+begin
+  compat_resource_gem = Gem::Specification.find_by_name("compat_resource")
+rescue Gem::LoadError
 end
 
-$:.unshift File.expand_path("../../files/lib", __FILE__)
-require 'chef_compat'
+if compat_resource_gem
+  # The gem is installed.
+  require 'chef_compat'
+  # Make sure the version installed is more recent than the cookbook so there's no confusion.
+  version_rb = IO.read(File.expand_path("../../files/lib/chef_compat/version.rb", __FILE__))
+  raise "Version file not in correct format" unless version_rb =~ /VERSION\s*=\s*'([^']+)'/
+  version = $1
+  if Gem::Version.new(version) > Gem::Version.new(ChefCompat::VERSION)
+    raise "Installed compat_resource gem #{ChefCompat::VERSION} is *older* than the compat_resource cookbook. Please install a more recent version."
+  end
+  Chef::Log.info("Using compat_resource gem version #{ChefCompat::VERSION} installed on system instead of compat_resource cookbook (which is version #{version}).")
+else
+
+  # The cookbook is the only copy; load the cookbook.
+  $:.unshift File.expand_path("../../files/lib", __FILE__)
+  require 'chef_compat'
+end

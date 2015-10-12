@@ -25,7 +25,6 @@ module ChefCompat
               ChefCompat::Monkeypatches::Class.module_eval do
                 def new(*args, &block)
                   # Trick it! Use ChefCompat::Resource instead of Chef::Resource::LWRPBase
-                  puts args.inspect
                   if args == [ ::Chef::Resource::LWRPBase ]
                     ChefCompat::Monkeypatches::Class.module_eval do
                       remove_method(:new) if method_defined?(:new)

@@ -17,6 +17,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'cheffish'
   s.add_development_dependency 'stove'
+  s.add_development_dependency 'chef'
 
   s.bindir       = 'bin'
   s.executables  = []
