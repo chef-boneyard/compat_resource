@@ -43,6 +43,8 @@ action :create do
   file ::File.expand_path('~/x.txt') do
     content 'hi'
   end
+  # return is how people exit from 12.5 actions. Test that it works across versions.
+  return
 end
 
 action :delete do
