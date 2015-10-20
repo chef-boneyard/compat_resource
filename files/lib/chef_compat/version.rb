@@ -1,3 +1,3 @@
 module ChefCompat
-  VERSION = '12.5.9' if !defined?(VERSION)
+  VERSION = '12.5.10' if !defined?(VERSION)
 end
