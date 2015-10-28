@@ -15,11 +15,15 @@ task default: :spec
 #
 CHEF_FILES = %w(chef/constants chef/delayed_evaluator chef/property
                 chef/resource chef/resource/action_class chef/provider
-                chef/mixin/params_validate)
-SPEC_FILES = %w(unit/property_spec.rb unit/property/state_spec.rb unit/property/validation_spec.rb
+                chef/mixin/params_validate chef/mixin/properties)
+SPEC_FILES = %w(unit/mixin/properties_spec.rb
+                unit/property_spec.rb
+                unit/property/state_spec.rb
+                unit/property/validation_spec.rb
                 integration/recipes/resource_action_spec.rb
                 integration/recipes/resource_converge_if_changed_spec.rb
-                integration/recipes/resource_load_spec.rb)
+                integration/recipes/resource_load_spec.rb
+             )
 KEEP_FUNCTIONS = {
   'chef/resource' => %w(
     initialize

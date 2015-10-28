@@ -2,10 +2,11 @@ require 'chef_compat/copied_from_chef'
 class Chef
 module ::ChefCompat
 module CopiedFromChef
-require 'chef_compat/copied_from_chef/chef/mixin/params_validate'
 require 'chef_compat/copied_from_chef/chef/resource/action_class'
+require 'chef_compat/copied_from_chef/chef/mixin/properties'
 class Chef < (defined?(::Chef) ? ::Chef : Object)
   class Resource < (defined?(::Chef::Resource) ? ::Chef::Resource : Object)
+    property :name, String, coerce: proc { |v| v.is_a?(Array) ? v.join(', ') : v.to_s }, desired_state: false
     def initialize(name, run_context=nil)
 super if defined?(::Chef::Resource)
       name(name) unless name.nil?
@@ -34,18 +35,6 @@ super if defined?(::Chef::Resource)
       @default_guard_interpreter = :default
       @elapsed_time = 0
       @sensitive = false
-    end
-    def self.properties(include_superclass=true)
-      @properties ||= {}
-      if include_superclass
-        if superclass.respond_to?(:properties)
-          superclass.properties.merge(@properties)
-        else
-          @properties.dup
-        end
-      else
-        @properties
-      end
     end
     def action(arg=nil)
       if arg
@@ -80,113 +69,6 @@ super if defined?(::Chef::Resource)
         result[property.name] = send(property.name)
       end
       return result.values.first if identity_properties.size == 1
-      result
-    end
-    include Chef::Mixin::ParamsValidate
-    def self.property(name, type=NOT_PASSED, **options)
-      name = name.to_sym
-
-      options.each { |k,v| options[k.to_sym] = v if k.is_a?(String) }
-
-      options[:instance_variable_name] = :"@#{name}" if !options.has_key?(:instance_variable_name)
-      options.merge!(name: name, declared_in: self)
-
-      if type == NOT_PASSED
-        # If a type is not passed, the property derives from the
-        # superclass property (if any)
-        if properties.has_key?(name)
-          property = properties[name].derive(**options)
-        else
-          property = property_type(**options)
-        end
-
-      # If a Property is specified, derive a new one from that.
-      elsif type.is_a?(Property) || (type.is_a?(Class) && type <= Property)
-        property = type.derive(**options)
-
-      # If a primitive type was passed, combine it with "is"
-      else
-        if options[:is]
-          options[:is] = ([ type ] + [ options[:is] ]).flatten(1)
-        else
-          options[:is] = type
-        end
-        property = property_type(**options)
-      end
-
-      local_properties = properties(false)
-      local_properties[name] = property
-
-      property.emit_dsl
-    end
-    def self.property_type(**options)
-      Property.derive(**options)
-    end
-    property :name, String, coerce: proc { |v| v.is_a?(Array) ? v.join(', ') : v.to_s }, desired_state: false
-    def property_is_set?(name)
-      property = self.class.properties[name.to_sym]
-      raise ArgumentError, "Property #{name} is not defined in class #{self}" if !property
-      property.is_set?(self)
-    end
-    def reset_property(name)
-      property = self.class.properties[name.to_sym]
-      raise ArgumentError, "Property #{name} is not defined in class #{self}" if !property
-      property.reset(self)
-    end
-    def self.lazy(&block)
-      DelayedEvaluator.new(&block)
-    end
-    def self.state_properties(*names)
-      if !names.empty?
-        names = names.map { |name| name.to_sym }.uniq
-
-        local_properties = properties(false)
-        # Add new properties to the list.
-        names.each do |name|
-          property = properties[name]
-          if !property
-            self.property name, instance_variable_name: false, desired_state: true
-          elsif !property.desired_state?
-            self.property name, desired_state: true
-          end
-        end
-
-        # If state_attrs *excludes* something which is currently desired state,
-        # mark it as desired_state: false.
-        local_properties.each do |name,property|
-          if property.desired_state? && !names.include?(name)
-            self.property name, desired_state: false
-          end
-        end
-      end
-
-      properties.values.select { |property| property.desired_state? }
-    end
-    def self.identity_properties(*names)
-      if !names.empty?
-        names = names.map { |name| name.to_sym }
-
-        # Add or change properties that are not part of the identity.
-        names.each do |name|
-          property = properties[name]
-          if !property
-            self.property name, instance_variable_name: false, identity: true
-          elsif !property.identity?
-            self.property name, identity: true
-          end
-        end
-
-        # If identity_properties *excludes* something which is currently part of
-        # the identity, mark it as identity: false.
-        properties.each do |name,property|
-          if property.identity? && !names.include?(name)
-            self.property name, identity: false
-          end
-        end
-      end
-
-      result = properties.values.select { |property| property.identity? }
-      result = [ properties[:name] ] if result.empty?
       result
     end
     def self.identity_property(name=nil)
