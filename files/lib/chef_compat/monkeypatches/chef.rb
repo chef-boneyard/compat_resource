@@ -3,7 +3,7 @@ class Chef
   # Earlier versions of Chef didn't have this message
   module ChefCompatDeprecation
     def log_deprecation(message, location=nil)
-      if superclass.respond_to?(:log_deprecation)
+      if superclass.method(:log_deprecation).owner != ChefCompatDeprecation
         if !location
           # Pick the first caller that is *not* part of the Chef or ChefCompat gem,
           # that's the thing the user wrote.
