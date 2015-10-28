@@ -53,7 +53,7 @@ KEEP_FUNCTIONS = {
   ),
 }
 KEEP_INCLUDES = {
-  'chef/resource' => %w(Chef::Mixin::ParamsValidate),
+  'chef/resource' => %w(Chef::Mixin::ParamsValidate Chef::Mixin::Properties),
   'chef/provider' => [],
 }
 KEEP_CLASSES = {

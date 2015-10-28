@@ -6,6 +6,7 @@ require 'chef_compat/copied_from_chef/chef/resource/action_class'
 require 'chef_compat/copied_from_chef/chef/mixin/properties'
 class Chef < (defined?(::Chef) ? ::Chef : Object)
   class Resource < (defined?(::Chef::Resource) ? ::Chef::Resource : Object)
+    include Chef::Mixin::Properties
     property :name, String, coerce: proc { |v| v.is_a?(Array) ? v.join(', ') : v.to_s }, desired_state: false
     def initialize(name, run_context=nil)
 super if defined?(::Chef::Resource)
