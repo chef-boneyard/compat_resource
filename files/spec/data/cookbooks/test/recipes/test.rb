@@ -30,3 +30,10 @@ end
 
 future_resource 'sets x and y to their defaults via creation' do
 end
+
+future_super_resource 'brings in its defaults' do
+end
+future_super_resource 'lets you set x and y' do
+  x 100
+  y 200
+end
