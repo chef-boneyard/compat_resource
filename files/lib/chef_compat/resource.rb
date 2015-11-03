@@ -45,15 +45,5 @@ module ChefCompat
         resource_name(name)
       end
     end
-
-    # for LWRPBase
-    def self.run_context
-      @run_context
-    end
-    def self.run_context=(arg)
-      @run_context = arg
-    end
-    require 'chef/mixin/from_file'
-    extend Chef::Mixin::FromFile
   end
 end

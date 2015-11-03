@@ -1,4 +1,4 @@
-require 'chef_compat/resource'
+require 'chef_compat/resource/lwrp_base'
 require 'chef/resource/lwrp_base'
 
 module ChefCompat
@@ -29,7 +29,7 @@ module ChefCompat
                     ChefCompat::Monkeypatches::Class.module_eval do
                       remove_method(:new) if method_defined?(:new)
                     end
-                    args = [ ChefCompat::Resource ]
+                    args = [ ChefCompat::Resource::LWRPBase ]
                   end
                   super(*args, &block)
                 end
