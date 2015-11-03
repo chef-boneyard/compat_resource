@@ -14,6 +14,8 @@ describe "compat_resource cookbook" do
                  File.join(cookbooks_path, 'future'))
     File.symlink(File.expand_path('../data/cookbooks/normal', __FILE__),
                  File.join(cookbooks_path, 'normal'))
+    File.symlink(File.expand_path('../data/cookbooks/hybrid', __FILE__),
+                 File.join(cookbooks_path, 'hybrid'))
   end
 
   require 'chef/mixin/shell_out'
