@@ -1,3 +1,5 @@
+# Make sure and emit a property that triggers deprecation
+property :n, name_property: true, default: 5
 property :x, String, coerce: proc { |x| x.to_s }, default: lazy { y*y }
 property :y, Integer, default: 4
 
