@@ -14,7 +14,7 @@ else
   class Chef
     class Resource
       def self.action(*args, &block)
-        raise "This resource is written with Chef 12.5 converged resources, and requires at least Chef 12.0 used with the compat_resource cookbook, it will not work with Chef 11.x clients, and those users must pin their cookbooks to older versions or upgrade."
+        raise "This resource is written with Chef 12.5 custom resources, and requires at least Chef 12.0 used with the compat_resource cookbook, it will not work with Chef 11.x clients, and those users must pin their cookbooks to older versions or upgrade."
       end
     end
   end
