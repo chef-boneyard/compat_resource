@@ -1,7 +1,3 @@
-unless Gem::Requirement.new(">= 12.0").satisfied_by?(Gem::Version.new(Chef::VERSION))
-  raise "The compat_resources cookbook does not support chef versions older than Chef 12.0.0"
-end
-
 begin
   compat_resource_gem = Gem::Specification.find_by_name("compat_resource")
 rescue Gem::LoadError
