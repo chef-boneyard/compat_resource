@@ -166,14 +166,7 @@ task :update do
           line = "#{indent}#{type}#{space}#{class_name} < (defined?(#{original_class}) ? #{original_class} : #{superclass_name})"
         else
           # Modules have a harder time of it because of self methods
-          line += <<-EOM
-#{indent}  if defined?(#{original_class})
-#{indent}    include #{original_class}
-#{indent}    @delegates_to = #{original_class}
-#{indent}    require 'chef_compat/delegating_class'
-#{indent}    extend DelegatingClass
-#{indent}  end
-EOM
+          line += "#{indent}  CopiedFromChef.extend_chef_module(#{original_class}, self) if defined?(#{original_class})"
         end
 
       # If we're not in a class we care about, don't print stuff

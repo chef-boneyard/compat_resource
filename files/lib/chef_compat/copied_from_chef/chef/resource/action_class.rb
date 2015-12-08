@@ -24,12 +24,7 @@ module CopiedFromChef
 class Chef < (defined?(::Chef) ? ::Chef : Object)
   class Resource < (defined?(::Chef::Resource) ? ::Chef::Resource : Object)
     module ActionClass
-      if defined?(::Chef::Resource::ActionClass)
-        include ::Chef::Resource::ActionClass
-        @delegates_to = ::Chef::Resource::ActionClass
-        require 'chef_compat/delegating_class'
-        extend DelegatingClass
-      end
+      CopiedFromChef.extend_chef_module(::Chef::Resource::ActionClass, self) if defined?(::Chef::Resource::ActionClass)
       #
       # If load_current_value! is defined on the resource, use that.
       #
@@ -72,12 +67,7 @@ class Chef < (defined?(::Chef) ? ::Chef : Object)
       end
 
       module ClassMethods
-        if defined?(::Chef::Resource::ActionClass::ClassMethods)
-          include ::Chef::Resource::ActionClass::ClassMethods
-          @delegates_to = ::Chef::Resource::ActionClass::ClassMethods
-          require 'chef_compat/delegating_class'
-          extend DelegatingClass
-        end
+        CopiedFromChef.extend_chef_module(::Chef::Resource::ActionClass::ClassMethods, self) if defined?(::Chef::Resource::ActionClass::ClassMethods)
         #
         # The Chef::Resource class this ActionClass was declared against.
         #

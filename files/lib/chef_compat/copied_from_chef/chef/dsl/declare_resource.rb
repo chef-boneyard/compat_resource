@@ -24,19 +24,9 @@ module CopiedFromChef
 
 class Chef < (defined?(::Chef) ? ::Chef : Object)
   module DSL
-    if defined?(::Chef::DSL)
-      include ::Chef::DSL
-      @delegates_to = ::Chef::DSL
-      require 'chef_compat/delegating_class'
-      extend DelegatingClass
-    end
+    CopiedFromChef.extend_chef_module(::Chef::DSL, self) if defined?(::Chef::DSL)
     module DeclareResource
-      if defined?(::Chef::DSL::DeclareResource)
-        include ::Chef::DSL::DeclareResource
-        @delegates_to = ::Chef::DSL::DeclareResource
-        require 'chef_compat/delegating_class'
-        extend DelegatingClass
-      end
+      CopiedFromChef.extend_chef_module(::Chef::DSL::DeclareResource, self) if defined?(::Chef::DSL::DeclareResource)
 
       #
       # Instantiates a resource (via #build_resource), then adds it to the

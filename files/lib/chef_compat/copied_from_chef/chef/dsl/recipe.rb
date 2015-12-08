@@ -5,27 +5,12 @@ module CopiedFromChef
 require 'chef_compat/copied_from_chef/chef/dsl/declare_resource'
 class Chef < (defined?(::Chef) ? ::Chef : Object)
   module DSL
-    if defined?(::Chef::DSL)
-      include ::Chef::DSL
-      @delegates_to = ::Chef::DSL
-      require 'chef_compat/delegating_class'
-      extend DelegatingClass
-    end
+    CopiedFromChef.extend_chef_module(::Chef::DSL, self) if defined?(::Chef::DSL)
     module Recipe
-      if defined?(::Chef::DSL::Recipe)
-        include ::Chef::DSL::Recipe
-        @delegates_to = ::Chef::DSL::Recipe
-        require 'chef_compat/delegating_class'
-        extend DelegatingClass
-      end
+      CopiedFromChef.extend_chef_module(::Chef::DSL::Recipe, self) if defined?(::Chef::DSL::Recipe)
       include Chef::DSL::DeclareResource
       module FullDSL
-        if defined?(::Chef::DSL::Recipe::FullDSL)
-          include ::Chef::DSL::Recipe::FullDSL
-          @delegates_to = ::Chef::DSL::Recipe::FullDSL
-          require 'chef_compat/delegating_class'
-          extend DelegatingClass
-        end
+        CopiedFromChef.extend_chef_module(::Chef::DSL::Recipe::FullDSL, self) if defined?(::Chef::DSL::Recipe::FullDSL)
         include Chef::DSL::Recipe
       end
     end

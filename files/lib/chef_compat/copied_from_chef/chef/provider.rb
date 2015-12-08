@@ -111,12 +111,7 @@ super if defined?(::Chef::Provider)
       include InlineResources
     end
     module InlineResources
-      if defined?(::Chef::Provider::InlineResources)
-        include ::Chef::Provider::InlineResources
-        @delegates_to = ::Chef::Provider::InlineResources
-        require 'chef_compat/delegating_class'
-        extend DelegatingClass
-      end
+      CopiedFromChef.extend_chef_module(::Chef::Provider::InlineResources, self) if defined?(::Chef::Provider::InlineResources)
       def compile_and_converge_action(&block)
         old_run_context = run_context
         @run_context = run_context.create_child
@@ -130,12 +125,7 @@ super if defined?(::Chef::Provider)
         @run_context = old_run_context
       end
       module ClassMethods
-        if defined?(::Chef::Provider::InlineResources::ClassMethods)
-          include ::Chef::Provider::InlineResources::ClassMethods
-          @delegates_to = ::Chef::Provider::InlineResources::ClassMethods
-          require 'chef_compat/delegating_class'
-          extend DelegatingClass
-        end
+        CopiedFromChef.extend_chef_module(::Chef::Provider::InlineResources::ClassMethods, self) if defined?(::Chef::Provider::InlineResources::ClassMethods)
         def action(name, &block)
           # We need the block directly in a method so that `super` works
           define_method("compile_action_#{name}", &block)
