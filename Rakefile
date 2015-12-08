@@ -23,6 +23,7 @@ CHEF_FILES = %w(
                 chef/property
                 chef/provider
                 chef/resource
+                chef/resource_builder
                 chef/resource/action_class
               )
 SPEC_FILES = %w(
@@ -181,7 +182,7 @@ EOM
       end
 
       # Modify requires to overridden files to bring in the local version
-      if line =~ /\A(\s*require\s*['"])(.+)(['"]\s*)$/
+      if line =~ /\A(\s*require\s*['"])([^'"]+)(['"].*)/
         if CHEF_FILES.include?($2)
           line = "#{$1}chef_compat/copied_from_chef/#{$2}#{$3}"
         else
