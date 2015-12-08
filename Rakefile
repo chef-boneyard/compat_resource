@@ -69,7 +69,7 @@ KEEP_FUNCTIONS = {
 KEEP_INCLUDES = {
   'chef/resource' => %w(Chef::Mixin::ParamsValidate Chef::Mixin::Properties),
   'chef/provider' => %w(Chef::DSL::Recipe::FullDSL),
-  'chef/dsl/recipe' => %w(Chef::DSL::DeclareResource Chef::DSL::Recipe)
+  'chef/dsl/recipe' => %w(Chef::DSL::DeclareResource Chef::DSL::Recipe),
 }
 KEEP_CLASSES = {
   'chef/provider' => %w(Chef::Provider Chef::Provider::InlineResources Chef::Provider::InlineResources::ClassMethods)
