@@ -1,4 +1,5 @@
 require 'tmpdir'
+require 'chef/version'
 
 describe "compat_resource cookbook" do
   let(:chef_repo_path) { Dir.mktmpdir }
@@ -47,5 +48,12 @@ describe "compat_resource cookbook" do
 #     -   set x to "16" \(default value\)
 #     -   set y to 4 \(default value\)
 # /)
+  end
+  if Chef::VERSION.to_f <= 12.5
+    it "when chef-client tries to declare_resource with extra parameters, it fails" do
+      expect {
+        shell_out!("bundle exec chef-client -c #{File.join(chef_repo_path, 'config.rb')} -F doc -o normal::declare_resource")
+      }.to raise_error(Mixlib::ShellOut::ShellCommandFailed)
+    end
   end
 end

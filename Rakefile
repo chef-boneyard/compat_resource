@@ -13,10 +13,21 @@ task default: :spec
 #
 # "rake update" updates the copied_from_chef files so we can grab bugfixes or new features
 #
-CHEF_FILES = %w(chef/constants chef/delayed_evaluator chef/property
-                chef/resource chef/resource/action_class chef/provider
-                chef/mixin/params_validate chef/mixin/properties)
-SPEC_FILES = %w(unit/mixin/properties_spec.rb
+CHEF_FILES = %w(
+                chef/constants
+                chef/delayed_evaluator
+                chef/dsl/declare_resource
+                chef/dsl/recipe
+                chef/mixin/params_validate
+                chef/mixin/properties
+                chef/property
+                chef/provider
+                chef/resource
+                chef/resource_builder
+                chef/resource/action_class
+              )
+SPEC_FILES = %w(
+                unit/mixin/properties_spec.rb
                 unit/property_spec.rb
                 unit/property/state_spec.rb
                 unit/property/validation_spec.rb
@@ -54,10 +65,12 @@ KEEP_FUNCTIONS = {
     self.include_resource_dsl
     self.include_resource_dsl_module
   ),
+  'chef/dsl/recipe' => %w(),
 }
 KEEP_INCLUDES = {
   'chef/resource' => %w(Chef::Mixin::ParamsValidate Chef::Mixin::Properties),
-  'chef/provider' => [],
+  'chef/provider' => %w(Chef::DSL::Recipe::FullDSL),
+  'chef/dsl/recipe' => %w(Chef::DSL::DeclareResource Chef::DSL::Recipe),
 }
 KEEP_CLASSES = {
   'chef/provider' => %w(Chef::Provider Chef::Provider::InlineResources Chef::Provider::InlineResources::ClassMethods)
@@ -169,7 +182,7 @@ EOM
       end
 
       # Modify requires to overridden files to bring in the local version
-      if line =~ /\A(\s*require\s*['"])(.+)(['"]\s*)$/
+      if line =~ /\A(\s*require\s*['"])([^'"]+)(['"].*)/
         if CHEF_FILES.include?($2)
           line = "#{$1}chef_compat/copied_from_chef/#{$2}#{$3}"
         else

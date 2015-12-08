@@ -10,3 +10,4 @@ end
 future_custom_resource 'blah4' do
   x 'hi4'
 end
+include_recipe 'future::declare_resource'
