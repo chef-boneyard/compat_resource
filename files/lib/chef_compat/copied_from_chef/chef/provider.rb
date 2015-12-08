@@ -151,6 +151,8 @@ super if defined?(::Chef::Provider)
           end
         end
       end
+      require 'chef_compat/copied_from_chef/chef/dsl/recipe'
+      include Chef::DSL::Recipe::FullDSL
     end
     protected
   end
