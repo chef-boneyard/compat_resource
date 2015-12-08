@@ -4,6 +4,7 @@ module ::ChefCompat
 module CopiedFromChef
 class Chef < (defined?(::Chef) ? ::Chef : Object)
   class Provider < (defined?(::Chef::Provider) ? ::Chef::Provider : Object)
+    attr_accessor :action
     def initialize(new_resource, run_context)
 super if defined?(::Chef::Provider)
       @new_resource = new_resource
@@ -108,6 +109,48 @@ super if defined?(::Chef::Provider)
     def self.use_inline_resources
       extend InlineResources::ClassMethods
       include InlineResources
+    end
+    module InlineResources
+      if defined?(::Chef::Provider::InlineResources)
+        include ::Chef::Provider::InlineResources
+        @delegates_to = ::Chef::Provider::InlineResources
+        require 'chef_compat/delegating_class'
+        extend DelegatingClass
+      end
+      def compile_and_converge_action(&block)
+        old_run_context = run_context
+        @run_context = run_context.create_child
+        return_value = instance_eval(&block)
+        Chef::Runner.new(run_context).converge
+        return_value
+      ensure
+        if run_context.resource_collection.any? { |r| r.updated? }
+          new_resource.updated_by_last_action(true)
+        end
+        @run_context = old_run_context
+      end
+      module ClassMethods
+        if defined?(::Chef::Provider::InlineResources::ClassMethods)
+          include ::Chef::Provider::InlineResources::ClassMethods
+          @delegates_to = ::Chef::Provider::InlineResources::ClassMethods
+          require 'chef_compat/delegating_class'
+          extend DelegatingClass
+        end
+        def action(name, &block)
+          # We need the block directly in a method so that `super` works
+          define_method("compile_action_#{name}", &block)
+          # We try hard to use `def` because define_method doesn't show the method name in the stack.
+          begin
+            class_eval <<-EOM
+              def action_#{name}
+                compile_and_converge_action { compile_action_#{name} }
+              end
+            EOM
+          rescue SyntaxError
+            define_method("action_#{name}") { send("compile_action_#{name}") }
+          end
+        end
+      end
     end
     protected
   end

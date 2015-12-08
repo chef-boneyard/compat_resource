@@ -33,6 +33,7 @@ KEEP_FUNCTIONS = {
     resource_name self.use_automatic_resource_name
 
     identity state state_for_resource_reporter property_is_set reset_property
+    to_hash
     self.properties self.state_properties self.state_attr
     self.identity_properties self.identity_property self.identity_attrs
     self.property self.property_type
@@ -47,6 +48,8 @@ KEEP_FUNCTIONS = {
   'chef/provider' => %w(
     initialize
     converge_if_changed
+    compile_and_converge_action
+    action
     self.use_inline_resources
     self.include_resource_dsl
     self.include_resource_dsl_module
@@ -57,7 +60,7 @@ KEEP_INCLUDES = {
   'chef/provider' => [],
 }
 KEEP_CLASSES = {
-  'chef/provider' => %w(Chef::Provider)
+  'chef/provider' => %w(Chef::Provider Chef::Provider::InlineResources Chef::Provider::InlineResources::ClassMethods)
 }
 SKIP_LINES = {
   'chef/dsl/recipe' => [ /include Chef::Mixin::PowershellOut/ ]
@@ -150,11 +153,14 @@ task :update do
           line = "#{indent}#{type}#{space}#{class_name} < (defined?(#{original_class}) ? #{original_class} : #{superclass_name})"
         else
           # Modules have a harder time of it because of self methods
-          line += "#{indent}  if defined?(#{original_class})\n"
-          line += "#{indent}    require 'chef_compat/delegating_class'\n"
-          line += "#{indent}    extend DelegatingClass\n"
-          line += "#{indent}    @delegates_to = #{original_class}\n"
-          line += "#{indent}  end"
+          line += <<-EOM
+#{indent}  if defined?(#{original_class})
+#{indent}    include #{original_class}
+#{indent}    @delegates_to = #{original_class}
+#{indent}    require 'chef_compat/delegating_class'
+#{indent}    extend DelegatingClass
+#{indent}  end
+EOM
         end
 
       # If we're not in a class we care about, don't print stuff
