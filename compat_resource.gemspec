@@ -1,4 +1,4 @@
-$:.unshift File.expand_path('../files/lib', __FILE__)
+$:.unshift File.expand_path('../libraries', __FILE__)
 project = File.basename(__FILE__)[0..-'.gemspec'.length-1]
 require "chef_compat/version"
 
@@ -21,6 +21,6 @@ Gem::Specification.new do |s|
 
   s.bindir       = 'bin'
   s.executables  = []
-  s.require_path = 'files/lib'
-  s.files = %w(LICENSE README.md CHANGELOG.md Gemfile Rakefile) + Dir.glob('{files/lib,spec}/**/*', File::FNM_DOTMATCH).reject {|f| File.directory?(f)}
+  s.require_path = 'libraries'
+  s.files = %w(LICENSE README.md CHANGELOG.md Gemfile Rakefile) + Dir.glob('{libraries,spec}/**/*', File::FNM_DOTMATCH).reject {|f| File.directory?(f)}
 end

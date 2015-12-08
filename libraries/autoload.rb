@@ -21,10 +21,5 @@ if compat_resource_gem
 else
 
   # The cookbook is the only copy; load the cookbook.
-  $:.unshift File.expand_path("../../files/lib", __FILE__)
-  begin
-    require 'chef_compat'
-  rescue LoadError
-    raise "Could not find my own library file, this is most likely due to no_lazy_load being set to false, please see https://github.com/chef-cookbooks/compat_resource/issues/10"
-  end
+  $:.unshift File.expand_path("..", __FILE__)
 end
