@@ -4,8 +4,10 @@ maintainer_email 'jkeiser@chef.io'
 license 'Apache 2.0'
 description 'Chef 12.5 Resources, For Chef 12.1-12.4'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-require_relative 'files/lib/chef_compat/version'
-version ChefCompat::VERSION
+
+version_rb = IO.read(File.expand_path("../files/lib/chef_compat/version.rb", __FILE__))
+raise "Version file not in correct format" unless version_rb =~ /VERSION\s*=\s*'([^']+)'/
+version $1
 
 chef_version '>= 12.0' if respond_to?(:chef_version)
 source_url 'https://github.com/chef-cookbooks/compat_resource' if respond_to?(:source_url)

@@ -1,4 +1,3 @@
-
 if Gem::Requirement.new(">= 12.0").satisfied_by?(Gem::Version.new(Chef::VERSION))
 
   require 'chef_compat/version'
