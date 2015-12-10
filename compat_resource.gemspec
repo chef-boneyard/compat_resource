@@ -1,2 +1,2 @@
-require_relative "files/lib/chef_compat/gemspec"
-ChefCompat::GEMSPEC
+require_relative "files/lib/compat_resource/gemspec"
+CompatResource::GEMSPEC

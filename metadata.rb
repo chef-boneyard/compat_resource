@@ -5,7 +5,7 @@ license 'Apache 2.0'
 description 'Chef 12.5 Resources, For Chef 12.1-12.4'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 
-version_rb = IO.read(File.expand_path("../files/lib/chef_compat/version.rb", __FILE__))
+version_rb = IO.read(File.expand_path("../files/lib/compat_resource/version.rb", __FILE__))
 raise "Version file not in correct format" unless version_rb =~ /VERSION\s*=\s*'([^']+)'/
 version $1
 
