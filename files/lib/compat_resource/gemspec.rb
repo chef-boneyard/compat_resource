@@ -27,7 +27,7 @@ module CompatResource
     s.bindir       = "files/bin"
     s.executables  = []
     s.require_path = "files/lib"
-    s.files = %w(LICENSE README.md CHANGELOG.md Gemfile /Rakefile) +
+    s.files = %w(LICENSE README.md CHANGELOG.md Gemfile Rakefile) +
               Dir.glob("#{s.full_gem_path}/files/{lib,spec}/**/*", File::FNM_DOTMATCH).reject {|f| File.directory?(f) }
   end
 end
