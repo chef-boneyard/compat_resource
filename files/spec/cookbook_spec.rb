@@ -21,9 +21,21 @@ describe "compat_resource cookbook" do
 
   require 'chef/mixin/shell_out'
   include Chef::Mixin::ShellOut
+  before :all do
+    Bundler.with_clean_env do
+      shell_out!("bundle install --gemfile #{File.expand_path('../data/Gemfile', __FILE__)}")
+    end
+  end
+
+  def run_chef(args)
+    Bundler.with_clean_env do
+      shell_out!("bundle exec chef-client -c #{File.join(chef_repo_path, 'config.rb')} -F doc #{args}",
+                 environment: { 'BUNDLE_GEMFILE' => File.expand_path('../data/Gemfile', __FILE__) })
+    end
+  end
 
   it "when chef-client runs the test recipe, it succeeds" do
-    result = shell_out!("bundle exec chef-client -c #{File.join(chef_repo_path, 'config.rb')} -F doc -o test::test,test")
+    result = run_chef("-o test::test,test")
     puts result.stdout
     puts result.stderr
 #     expect(result.stdout).to match(/
@@ -52,7 +64,7 @@ describe "compat_resource cookbook" do
   if Chef::VERSION.to_f <= 12.5
     it "when chef-client tries to declare_resource with extra parameters, it fails" do
       expect {
-        shell_out!("bundle exec chef-client -c #{File.join(chef_repo_path, 'config.rb')} -F doc -o normal::declare_resource")
+        run_chef("-o normal::declare_resource")
       }.to raise_error(Mixlib::ShellOut::ShellCommandFailed)
     end
   end
