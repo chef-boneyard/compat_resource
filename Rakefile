@@ -51,7 +51,7 @@ KEEP_FUNCTIONS = {
     self.lazy
 
     action allowed_actions self.allowed_actions self.default_action
-    self.action self.declare_action_class self.action_class
+    currently_running_action self.action self.declare_action_class self.action_class
 
     load_current_value current_value_does_not_exist
     self.load_current_value
