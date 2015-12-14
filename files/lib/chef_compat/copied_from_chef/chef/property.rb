@@ -21,6 +21,7 @@ module CopiedFromChef
 #
 
 require 'chef_compat/copied_from_chef/chef/delayed_evaluator'
+require 'chef_compat/copied_from_chef/chef/log'
 
 class Chef < (defined?(::Chef) ? ::Chef : Object)
   #
