@@ -25,6 +25,7 @@ CHEF_FILES = %w(
                 chef/resource
                 chef/resource_builder
                 chef/resource/action_class
+                chef/log
               )
 SPEC_FILES = %w(
                 unit/mixin/properties_spec.rb
