@@ -1,3 +1,3 @@
 module CompatResource
-  VERSION = '12.5.20'
+  VERSION = '12.5.21'
 end
