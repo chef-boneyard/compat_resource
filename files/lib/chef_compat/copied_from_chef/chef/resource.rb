@@ -73,7 +73,7 @@ super if defined?(::Chef::Resource)
       return result.values.first if identity_properties.size == 1
       result
     end
-    attr_reader :currently_running_action
+    attr_accessor :resource_initializing
     def to_hash
       # Grab all current state, then any other ivars (backcompat)
       result = {}

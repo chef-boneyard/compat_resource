@@ -45,14 +45,14 @@ KEEP_FUNCTIONS = {
     resource_name self.use_automatic_resource_name
 
     identity state state_for_resource_reporter property_is_set reset_property
-    to_hash
+    resource_initializing to_hash
     self.properties self.state_properties self.state_attr
     self.identity_properties self.identity_property self.identity_attrs
     self.property self.property_type
     self.lazy
 
     action allowed_actions self.allowed_actions self.default_action
-    currently_running_action self.action self.declare_action_class self.action_class
+    self.action self.declare_action_class self.action_class
 
     load_current_value current_value_does_not_exist
     self.load_current_value

@@ -75,7 +75,14 @@ super if defined?(::Chef::ResourceBuilder)
       resource.params = params
 
       # Evaluate resource attribute DSL
-      resource.instance_eval(&block) if block_given?
+      if block_given?
+        resource.resource_initializing = true
+        begin
+          resource.instance_eval(&block)
+        ensure
+          resource.resource_initializing = false
+        end
+      end
 
       # emit a cloned resource warning if it is warranted
       if prior_resource
