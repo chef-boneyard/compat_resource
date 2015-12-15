@@ -319,7 +319,8 @@ super if defined?(::Chef::Property)
         #
         # It won't do what they expect. This checks whether you try to *read*
         # `content` while we are compiling the resource.
-        if resource.resource_initializing &&
+        if resource.respond_to?(:resource_initializing) &&
+           resource.resource_initializing &&
            resource.respond_to?(:enclosing_provider) &&
            resource.enclosing_provider &&
            resource.enclosing_provider.respond_to?(name)

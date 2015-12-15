@@ -142,7 +142,7 @@ super if defined?(::Chef::ResourceBuilder)
       @prior_resource ||=
         begin
           key = "#{type}[#{name}]"
-          prior_resource = run_context.resource_collection.lookup(key)
+          run_context.resource_collection.lookup(key)
         rescue Chef::Exceptions::ResourceNotFound
           nil
         end
