@@ -45,7 +45,7 @@ KEEP_FUNCTIONS = {
     resource_name self.use_automatic_resource_name
 
     identity state state_for_resource_reporter property_is_set reset_property
-    resource_initializing to_hash
+    resource_initializing resource_initializing= to_hash
     self.properties self.state_properties self.state_attr
     self.identity_properties self.identity_property self.identity_attrs
     self.property self.property_type
