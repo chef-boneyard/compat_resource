@@ -152,7 +152,6 @@ super if defined?(::Chef::ResourceBuilder)
 end
 
 require 'chef_compat/copied_from_chef/chef/resource'
-require 'chef_compat/copied_from_chef/chef/log'
 end
 end
 end
