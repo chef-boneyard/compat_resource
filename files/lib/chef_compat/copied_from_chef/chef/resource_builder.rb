@@ -151,7 +151,7 @@ super if defined?(::Chef::ResourceBuilder)
   end
 end
 
-require 'chef_compat/copied_from_chef/chef/resource'
+require "chef_compat/copied_from_chef/chef/resource"
 end
 end
 end
