@@ -4,7 +4,7 @@ module ::ChefCompat
 module CopiedFromChef
 #
 # Author:: John Keiser <jkeiser@chef.io>
-# Copyright:: Copyright (c) 2015 John Keiser.
+# Copyright:: Copyright 2015-2016, John Keiser.
 # License:: Apache License, Version 2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -131,7 +131,7 @@ super if defined?(::Chef::Property)
     end
 
     def to_s
-      "#{name}#{declared_in ? " of resource #{declared_in.resource_name}" : ""}"
+      "#{name || "<property type>"}#{declared_in ? " of resource #{declared_in.resource_name}" : ""}"
     end
 
     #
@@ -465,7 +465,12 @@ super if defined?(::Chef::Property)
     def validate(resource, value)
       # If we have no default value, `nil` is never coerced or validated
       unless value.nil? && !has_default?
-        (resource || Chef::Mixin::ParamsValidate).validate({ name => value }, { name => validation_options })
+        if resource
+          resource.validate({ name => value }, { name => validation_options })
+        else
+          name = self.name || :property_type
+          Chef::Mixin::ParamsValidate.validate({ name => value }, { name => validation_options })
+        end
       end
     end
 
