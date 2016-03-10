@@ -109,7 +109,7 @@ class Chef < (defined?(::Chef) ? ::Chef : Object)
           run_context:         run_context,
           cookbook_name:       cookbook_name,
           recipe_name:         recipe_name,
-          enclosing_provider:  self.is_a?(Chef::Provider) ? self : nil,
+          enclosing_provider:  self.is_a?(Chef::Provider) ? self : nil
         ).build(&resource_attrs_block)
       end
     end
