@@ -83,6 +83,7 @@ PROCESS_LINES = {
 # See chef_compat/resource for def. of resource_name and provider
 # See chef_compat/monkeypatches/chef/resource for def. of current_value
 
+desc "Pull new files from the chef client this is bundled with and update this cookbook"
 task :update do
   # Copy files from chef to chef_compat/chef, with a few changes
   target_path = File.expand_path("../files/lib/chef_compat/copied_from_chef", __FILE__)
