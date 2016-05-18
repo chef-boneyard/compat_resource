@@ -16,12 +16,11 @@ env: "GEMFILE_MOD=\"gem 'chef', '~> 12.10'\""
 
 # The set of Rubies Chef works with
 rvm:
-  - 2.0
   - 2.1
   - 2.2
 
 # Add builds that work with specific chefs
-# 12.4 is not specifically included because the *default* version is "latest release"
+# 12.10 is not specifically included because the *default* version is "latest release"
 matrix:
   include:
     - env: "GEMFILE_MOD=\"gem 'chef', github: 'chef/chef'\""
