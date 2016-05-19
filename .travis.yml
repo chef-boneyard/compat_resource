@@ -25,7 +25,7 @@ matrix:
   include:
     - env: "GEMFILE_MOD=\"gem 'chef', github: 'chef/chef'\""
       rvm: 2.1
-    - env: "GEMFILE_MOD=\"gem 'chef', '~> 12.9.0''\""
+    - env: "GEMFILE_MOD=\"gem 'chef', '~> 12.9.0'\""
       rvm: 2.1
     - env: "GEMFILE_MOD=\"gem 'chef', '~> 12.8.0'\""
       rvm: 2.1
