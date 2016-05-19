@@ -18,8 +18,8 @@ class Chef
 
       begin
         super
-      # Bleagh. `super_method` doesn't exist on older rubies and I haven't
-      # figured out a way to check for its existence otherwise.
+        # Bleagh. `super_method` doesn't exist on older rubies and I haven't
+        # figured out a way to check for its existence otherwise.
       rescue NoMethodError
         Chef::Log.warn(message)
       end
@@ -29,4 +29,5 @@ class Chef
   class<<self
     prepend ChefCompatDeprecation
   end
+
 end
