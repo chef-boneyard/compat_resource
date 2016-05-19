@@ -16,15 +16,18 @@ task default: :spec
 CHEF_FILES = %w(
                 chef/constants
                 chef/delayed_evaluator
+                chef/dsl/core
                 chef/dsl/declare_resource
                 chef/dsl/recipe
+                chef/mixin/lazy_module_include
+                chef/mixin/notifying_block
                 chef/mixin/params_validate
                 chef/mixin/properties
                 chef/property
                 chef/provider
                 chef/resource
-                chef/resource_builder
                 chef/resource/action_class
+                chef/resource_builder
               )
 SPEC_FILES = %w(
                 unit/mixin/properties_spec.rb
@@ -69,8 +72,8 @@ KEEP_FUNCTIONS = {
 }
 KEEP_INCLUDES = {
   'chef/resource' => %w(Chef::Mixin::ParamsValidate Chef::Mixin::Properties),
-  'chef/provider' => %w(Chef::DSL::Recipe::FullDSL),
-  'chef/dsl/recipe' => %w(Chef::DSL::DeclareResource Chef::DSL::Recipe),
+  'chef/provider' => %w(Chef::DSL::Core),
+  'chef/dsl/recipe' => %w(Chef::DSL::Core Chef::DSL::Recipe Chef::Mixin::LazyModuleInclude),
 }
 KEEP_CLASSES = {
   'chef/provider' => %w(Chef::Provider Chef::Provider::InlineResources Chef::Provider::InlineResources::ClassMethods)
