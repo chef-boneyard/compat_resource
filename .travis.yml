@@ -48,3 +48,7 @@ notifications:
     on_failure: always
     on_success: change
     secure: W2QBW06FQcKP8F6VrVJZjhJDZkz46meV0Zuj/AHcexYbGvB9zWE8Vb/U5h7YW5CS1U2y0hKwl1VgdOmLf+SWDZLFLZ5hYcc44VJqQl5XZlaOw4OCeUvp4aluzTl9n4qRh1DTPrvb37iZbA2uMcLlyhiv1jVS8NnNaqqh9Uy/A5A=
+
+branches:
+  only:
+  - master
