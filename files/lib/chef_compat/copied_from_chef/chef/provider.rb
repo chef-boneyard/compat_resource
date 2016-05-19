@@ -6,8 +6,10 @@ require 'chef_compat/copied_from_chef'
 class Chef
 module ::ChefCompat
 module CopiedFromChef
+require "chef_compat/copied_from_chef/chef/dsl/core"
 class Chef < (defined?(::Chef) ? ::Chef : Object)
   class Provider < (defined?(::Chef::Provider) ? ::Chef::Provider : Object)
+    include Chef::DSL::Core
     attr_accessor :action
     def initialize(new_resource, run_context)
 super if defined?(::Chef::Provider)
@@ -145,8 +147,6 @@ super if defined?(::Chef::Provider)
           end
         end
       end
-      require "chef_compat/copied_from_chef/chef/dsl/recipe"
-      include Chef::DSL::Recipe::FullDSL
     end
     protected
   end
