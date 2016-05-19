@@ -17,13 +17,15 @@ describe "compat_resource cookbook" do
                  File.join(cookbooks_path, 'normal'))
     File.symlink(File.expand_path('../data/cookbooks/hybrid', __FILE__),
                  File.join(cookbooks_path, 'hybrid'))
+    File.symlink(File.expand_path('../data/cookbooks/notifications', __FILE__),
+                 File.join(cookbooks_path, 'notifications'))
   end
 
   require 'chef/mixin/shell_out'
   include Chef::Mixin::ShellOut
   before :all do
     Bundler.with_clean_env do
-      shell_out!("bundle install --gemfile #{File.expand_path('../data/Gemfile', __FILE__)}")
+      shell_out!("bundle update --gemfile #{File.expand_path('../data/Gemfile', __FILE__)}")
     end
   end
 
@@ -32,6 +34,12 @@ describe "compat_resource cookbook" do
       shell_out!("bundle exec chef-client -c #{File.join(chef_repo_path, 'config.rb')} -F doc #{args}",
                  environment: { 'BUNDLE_GEMFILE' => File.expand_path('../data/Gemfile', __FILE__) })
     end
+  end
+
+  it "should handle new-style recursive notifications" do
+    result = run_chef("-o notifications")
+    puts result.stdout
+    puts result.stderr
   end
 
   it "when chef-client runs the test recipe, it succeeds" do
