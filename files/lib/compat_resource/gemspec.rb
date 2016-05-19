@@ -21,7 +21,6 @@ module CompatResource
     s.add_development_dependency 'rake'
     s.add_development_dependency 'rspec'
     s.add_development_dependency 'cheffish'
-    s.add_development_dependency 'stove'
     s.add_development_dependency 'chef'
 
     s.bindir       = "files/bin"
