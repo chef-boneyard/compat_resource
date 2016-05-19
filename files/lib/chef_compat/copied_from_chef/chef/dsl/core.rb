@@ -27,6 +27,7 @@ module CopiedFromChef
 
 require "chef_compat/copied_from_chef/chef/dsl/declare_resource"
 require "chef_compat/copied_from_chef/chef/mixin/notifying_block"
+require "chef_compat/copied_from_chef/chef/mixin/powershell_out"
 
 class Chef < (defined?(::Chef) ? ::Chef : Object)
   module DSL

@@ -1,4 +1,5 @@
 require 'chef/run_context'
+require 'chef_compat/monkeypatches/chef/resource_collection'
 
 if Gem::Requirement.new("< 12.10.24").satisfied_by?(Gem::Version.new(Chef::VERSION))
   module ChefCompat
@@ -27,7 +28,9 @@ if Gem::Requirement.new("< 12.10.24").satisfied_by?(Gem::Version.new(Chef::VERSI
       # root has already been created and initialized, obviously.
       #
 
-      prepend ChefCompat::Monkeypatches::Chef::RunContext
+      unless method_defined?(:parent_run_context)
+        attr_accessor :parent_run_context
+      end
 
       unless method_defined?(:delayed_actions)
         def delayed_actions
@@ -47,6 +50,8 @@ if Gem::Requirement.new("< 12.10.24").satisfied_by?(Gem::Version.new(Chef::VERSI
           @delayed_notification_collection = Hash.new { |h, k| h[k] = [] }
           @delayed_actions = []
         end
+      else
+        prepend ChefCompat::Monkeypatches::Chef::RunContext
       end
 
       unless method_defined?(:add_delayed_action)
@@ -63,6 +68,7 @@ if Gem::Requirement.new("< 12.10.24").satisfied_by?(Gem::Version.new(Chef::VERSI
       unless method_defined?(:create_child)
         def create_child
           result = dup
+          result.parent_run_context = self
           result.initialize_child_state
           result
         end

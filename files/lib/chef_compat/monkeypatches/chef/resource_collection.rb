@@ -19,118 +19,85 @@
 
 require "chef/resource_collection/resource_set"
 require "chef/resource_collection/resource_list"
-require "chef/resource_collection/resource_collection_serialization"
-require "chef/log"
-require "forwardable"
+require "chef/resource_collection"
+require "chef/exceptions"
 
-##
-# ResourceCollection currently handles two tasks:
-# 1) Keeps an ordered list of resources to use when converging the node
-# 2) Keeps a unique list of resources (keyed as `type[name]`) used for notifications
-class Chef
-  class ResourceCollection
-    include ResourceCollectionSerialization
-    extend Forwardable
+module ChefCompat
+  module Monkeypatches
+    module Chef
+      module ResourceCollection
+        module RecursiveNotificationLookup
+          #
+          # Copied verbatim from Chef 12.10.24
+          #
+          attr_accessor :run_context
 
-    attr_reader :resource_set, :resource_list
-    attr_accessor :run_context
+          def initialize(run_context = nil)
+            super()
+            @run_context = run_context
+          end
 
-    protected :resource_set, :resource_list
+          def lookup_local(key)
+            resource_set.lookup(key)
+          end
 
-    def initialize(run_context = nil)
-      @run_context = run_context
-      @resource_set = ResourceSet.new
-      @resource_list = ResourceList.new
-    end
+          def find_local(*args)
+            resource_set.find(*args)
+          end
 
-    # @param resource [Chef::Resource] The resource to insert
-    # @param resource_type [String,Symbol] If known, the resource type used in the recipe, Eg `package`, `execute`
-    # @param instance_name [String] If known, the recource name as used in the recipe, IE `vim` in `package 'vim'`
-    # This method is meant to be the 1 insert method necessary in the future.  It should support all known use cases
-    #   for writing into the ResourceCollection.
-    def insert(resource, opts = {})
-      resource_type ||= opts[:resource_type] # Would rather use Ruby 2.x syntax, but oh well
-      instance_name ||= opts[:instance_name]
-      resource_list.insert(resource)
-      if !(resource_type.nil? && instance_name.nil?)
-        resource_set.insert_as(resource, resource_type, instance_name)
-      else
-        resource_set.insert_as(resource)
+          def lookup(key)
+            if run_context.nil?
+              lookup_local(key)
+            else
+              lookup_recursive(run_context, key)
+            end
+          end
+
+          def find(*args)
+            if run_context.nil?
+              find_local(*args)
+            else
+              find_recursive(run_context, *args)
+            end
+          end
+
+          private
+
+          def lookup_recursive(rc, key)
+            rc.resource_collection.send(:resource_set).lookup(key)
+          rescue ::Chef::Exceptions::ResourceNotFound
+            raise if !rc.respond_to?(:parent_run_context) || rc.parent_run_context.nil?
+            lookup_recursive(rc.parent_run_context, key)
+          end
+
+          def find_recursive(rc, *args)
+            rc.resource_collection.send(:resource_set).find(*args)
+          rescue ::Chef::Exceptions::ResourceNotFound
+            raise if !rc.respond_to?(:parent_run_context) || rc.parent_run_context.nil?
+            find_recursive(rc.parent_run_context, *args)
+          end
+        end
+
+        module DeleteResources
+          #
+          # Copied verbatim from Chef 12.10.24
+          #
+          def delete(key)
+            resource_list.delete(key)
+            resource_set.delete(key)
+          end
+        end
       end
     end
+  end
+end
 
-    def delete(key)
-      resource_list.delete(key)
-      resource_set.delete(key)
-    end
 
-    # @deprecated
-    def []=(index, resource)
-      Chef::Log.warn("`[]=` is deprecated, use `insert` (which only inserts at the end)")
-      resource_list[index] = resource
-      resource_set.insert_as(resource)
-    end
-
-    # @deprecated
-    def push(*resources)
-      Chef::Log.warn("`push` is deprecated, use `insert`")
-      resources.flatten.each do |res|
-        insert(res)
-      end
-      self
-    end
-
-    # @deprecated
-    alias_method :<<, :insert
-
-    # Read-only methods are simple to delegate - doing that below
-
-    resource_list_methods = Enumerable.instance_methods +
-      [:iterator, :all_resources, :[], :each, :execute_each_resource, :each_index, :empty?] -
-      [:find] # find overridden below
-    resource_set_methods = [:resources, :keys, :validate_lookup_spec!]
-
-    def_delegators :resource_list, *resource_list_methods
-    def_delegators :resource_set, *resource_set_methods
-
-    def lookup_local(key)
-      resource_set.lookup(key)
-    end
-
-    def find_local(*args)
-      resource_set.find(*args)
-    end
-
-    def lookup(key)
-      if run_context.nil?
-        lookup_local(key)
-      else
-        lookup_recursive(run_context, key)
-      end
-    end
-
-    def find(*args)
-      if run_context.nil?
-        find_local(*args)
-      else
-        find_recursive(run_context, *args)
-      end
-    end
-
-    private
-
-    def lookup_recursive(rc, key)
-      rc.resource_collection.resource_set.lookup(key)
-    rescue Chef::Exceptions::ResourceNotFound
-      raise if rc.parent_run_context.nil?
-      lookup_recursive(rc.parent_run_context, key)
-    end
-
-    def find_recursive(rc, *args)
-      rc.resource_collection.resource_set.find(*args)
-    rescue Chef::Exceptions::ResourceNotFound
-      raise if rc.parent_run_context.nil?
-      find_recursive(rc.parent_run_context, *args)
-    end
+class Chef::ResourceCollection
+  unless method_defined?(:lookup_local)
+    prepend ChefCompat::Monkeypatches::Chef::ResourceCollection::RecursiveNotificationLookup
+  end
+  unless method_defined?(:delete)
+    prepend ChefCompat::Monkeypatches::Chef::ResourceCollection::DeleteResources
   end
 end

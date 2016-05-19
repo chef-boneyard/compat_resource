@@ -22,6 +22,7 @@ CHEF_FILES = %w(
                 chef/mixin/lazy_module_include
                 chef/mixin/notifying_block
                 chef/mixin/params_validate
+                chef/mixin/powershell_out
                 chef/mixin/properties
                 chef/property
                 chef/provider

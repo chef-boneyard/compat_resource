@@ -9,6 +9,7 @@ module CopiedFromChef
 require "chef_compat/copied_from_chef/chef/resource/action_class"
 require "chef_compat/copied_from_chef/chef/provider"
 require "chef_compat/copied_from_chef/chef/mixin/properties"
+require "chef_compat/copied_from_chef/chef/mixin/powershell_out"
 class Chef < (defined?(::Chef) ? ::Chef : Object)
   class Resource < (defined?(::Chef::Resource) ? ::Chef::Resource : Object)
     include Chef::Mixin::Properties
