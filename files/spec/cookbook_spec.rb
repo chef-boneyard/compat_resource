@@ -61,7 +61,7 @@ describe "compat_resource cookbook" do
 #     -   set y to 4 \(default value\)
 # /)
   end
-  if Chef::VERSION.to_f <= 12.5
+  if Gem::Requirement.new("< 12.6").satisfied_by?(Gem::Version.new(Chef::VERSION))
     it "when chef-client tries to declare_resource with extra parameters, it fails" do
       expect {
         run_chef("-o normal::declare_resource")
