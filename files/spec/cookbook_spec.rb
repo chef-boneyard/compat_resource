@@ -24,8 +24,9 @@ describe "compat_resource cookbook" do
   require 'chef/mixin/shell_out'
   include Chef::Mixin::ShellOut
   before :all do
+    FileUtils.rm_f(File.expand_path('../data/Gemfile.lock', __FILE__))
     Bundler.with_clean_env do
-      shell_out!("bundle update --gemfile #{File.expand_path('../data/Gemfile', __FILE__)}")
+      shell_out!("bundle install --gemfile #{File.expand_path('../data/Gemfile', __FILE__)}")
     end
   end
 
