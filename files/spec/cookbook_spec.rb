@@ -19,6 +19,8 @@ describe "compat_resource cookbook" do
                  File.join(cookbooks_path, 'hybrid'))
     File.symlink(File.expand_path('../data/cookbooks/notifications', __FILE__),
                  File.join(cookbooks_path, 'notifications'))
+    File.symlink(File.expand_path('../data/cookbooks/cloning', __FILE__),
+                 File.join(cookbooks_path, 'cloning'))
   end
 
   require 'chef/mixin/shell_out'
@@ -41,6 +43,11 @@ describe "compat_resource cookbook" do
     result = run_chef("-o notifications")
     puts result.stdout
     puts result.stderr
+  end
+
+  it "should not clone resources from the outer run context" do
+    result = run_chef("-o future::declare_resource,cloning::default")
+    expect(result.stdout).not_to match(/3694/)
   end
 
   it "when chef-client runs the test recipe, it succeeds" do
