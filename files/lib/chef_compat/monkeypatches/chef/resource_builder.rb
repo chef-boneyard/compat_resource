@@ -16,6 +16,14 @@
 # limitations under the License.
 #
 
+# XXX: we now have two copies of this file in the compat_resource cookbook.  I'm uncertain if this is a
+# bug or a feature, and I suspect it is actually a feature.  The point of this file is that for all
+# resources and cookbooks the global Chef::ResourceBuilder class must be upgraded to at least the
+# 12.10.24 version.  The point of the other copy is that for compat_resource cookbooks all their
+# resources should be using the lastest version that has been sync'd.  So these two files should
+# diverge as times goes on.  I believe that is the correct behavior and that we want to have both
+# files in this cookbook.
+
 # NOTE: this was extracted from the Recipe DSL mixin, relevant specs are in spec/unit/recipe_spec.rb
 
 if Gem::Requirement.new("< 12.10.24").satisfied_by?(Gem::Version.new(Chef::VERSION))
