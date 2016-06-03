@@ -26,6 +26,7 @@ CHEF_FILES = %w(
                 chef/mixin/properties
                 chef/property
                 chef/provider
+                chef/provider/noop
                 chef/resource
                 chef/resource/action_class
                 chef/resource_builder
