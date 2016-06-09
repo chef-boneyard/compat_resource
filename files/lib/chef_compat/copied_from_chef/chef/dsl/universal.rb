@@ -1,5 +1,5 @@
 begin
-  require 'chef/dsl/core'
+  require 'chef/dsl/universal'
 rescue LoadError; end
 
 require 'chef_compat/copied_from_chef'
@@ -25,10 +25,8 @@ module CopiedFromChef
 # limitations under the License.
 #
 
-require "chef_compat/copied_from_chef/chef/dsl/declare_resource"
-require "chef_compat/copied_from_chef/chef/dsl/universal"
-require "chef_compat/copied_from_chef/chef/mixin/notifying_block"
-require "chef_compat/copied_from_chef/chef/mixin/lazy_module_include"
+require "chef_compat/copied_from_chef/chef/dsl/platform_introspection"
+require "chef_compat/copied_from_chef/chef/mixin/powershell_out"
 
 class Chef < (defined?(::Chef) ? ::Chef : Object)
   module DSL
@@ -51,12 +49,11 @@ class Chef < (defined?(::Chef) ? ::Chef : Object)
     #   - this is for general-purpose stuff that is useful nearly everywhere.
     #   - it also pollutes the namespace of nearly every context, watch out.
     #
-    module Core
-      CopiedFromChef.extend_chef_module(::Chef::DSL::Core, self) if defined?(::Chef::DSL::Core)
-      include Chef::DSL::Universal
-      include Chef::DSL::DeclareResource
-      include Chef::Mixin::NotifyingBlock
-      extend Chef::Mixin::LazyModuleInclude
+    module Universal
+      CopiedFromChef.extend_chef_module(::Chef::DSL::Universal, self) if defined?(::Chef::DSL::Universal)
+      include Chef::DSL::PlatformIntrospection
+      include Chef::Mixin::PowershellOut
+      include Chef::Mixin::ShellOut
     end
   end
 end

@@ -18,7 +18,9 @@ CHEF_FILES = %w(
                 chef/delayed_evaluator
                 chef/dsl/core
                 chef/dsl/declare_resource
+                chef/dsl/platform_introspection
                 chef/dsl/recipe
+                chef/dsl/universal
                 chef/mixin/lazy_module_include
                 chef/mixin/notifying_block
                 chef/mixin/params_validate
