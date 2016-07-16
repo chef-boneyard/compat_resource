@@ -192,6 +192,9 @@ super if defined?(::Chef::Resource)
     class << self
     end
     @@sorted_descendants = nil
+    module DeprecatedLWRPClass
+      CopiedFromChef.extend_chef_module(::Chef::Resource::DeprecatedLWRPClass, self) if defined?(::Chef::Resource::DeprecatedLWRPClass)
+    end
     private
   end
 end
