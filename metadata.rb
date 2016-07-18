@@ -10,5 +10,5 @@ raise "Version file not in correct format" unless version_rb =~ /VERSION\s*=\s*'
 version $1
 
 chef_version '>= 12.0' if respond_to?(:chef_version)
-source_url 'https://github.com/chef-cookbooks/compat_resource' if respond_to?(:source_url)
-issues_url 'https://github.com/chef-cookbooks/compat_resource/issues' if respond_to?(:issues_url)
+source_url 'https://github.com/chef-cookbooks/compat_resource'
+issues_url 'https://github.com/chef-cookbooks/compat_resource/issues'
