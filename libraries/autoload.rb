@@ -7,6 +7,7 @@ end
 # NOTE: if the gem is installed but on a different version, we simply don't care: the cookbook version wins.
 #       If another gem depends on a different version being there, rubygems will correctly throw the error.
 if Gem.loaded_specs["compat_resource"]
+  Chef.log_deprecation "using compat_resource as a gem is deprecated and will be removed in a future version of this cookbook"
   # Read our current version
   version_rb = IO.read(File.expand_path("../../files/lib/compat_resource/version.rb", __FILE__))
   raise "Version file not in correct format" unless version_rb =~ /VERSION\s*=\s*'([^']+)'/
