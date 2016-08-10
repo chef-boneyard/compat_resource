@@ -1,4 +1,4 @@
-if Gem::Requirement.new('< 12.13.32').satisfied_by?(Gem::Version.new(Chef::VERSION))
+if Gem::Requirement.new('< 12.10.24').satisfied_by?(Gem::Version.new(Chef::VERSION))
 #--
 # Author:: Adam Jacob (<adam@chef.io>)
 # Author:: Christopher Walters (<cw@chef.io>)

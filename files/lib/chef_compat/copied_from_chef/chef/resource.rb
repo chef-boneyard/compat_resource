@@ -58,6 +58,10 @@ super if defined?(::Chef::Resource)
       end
     end
     alias_method :action=, :action
+    class UnresolvedSubscribes < (defined?(::Chef::Resource::UnresolvedSubscribes) ? ::Chef::Resource::UnresolvedSubscribes : self)
+      alias_method :to_s, :name
+      alias_method :declared_key, :name
+    end
     def state_for_resource_reporter
       state = {}
       state_properties = self.class.state_properties

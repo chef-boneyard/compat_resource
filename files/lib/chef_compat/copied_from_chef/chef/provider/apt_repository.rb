@@ -260,7 +260,7 @@ class Chef < (defined?(::Chef) ? ::Chef : Object)
   end
 end
 
-Chef::Provider::Noop.provides :apt_resource
+Chef::Provider::Noop.provides :apt_repository
 end
 end
 end
