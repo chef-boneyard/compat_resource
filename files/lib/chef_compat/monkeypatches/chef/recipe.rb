@@ -6,7 +6,7 @@
 # NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE
 #
 
-if Gem::Requirement.new('< 12.13.30').satisfied_by?(Gem::Version.new(Chef::VERSION))
+if Gem::Requirement.new('< 12.13.32').satisfied_by?(Gem::Version.new(Chef::VERSION))
 #--
 # Author:: Adam Jacob (<adam@chef.io>)
 # Author:: Christopher Walters (<cw@chef.io>)
@@ -27,16 +27,7 @@ if Gem::Requirement.new('< 12.13.30').satisfied_by?(Gem::Version.new(Chef::VERSI
 #
 
 require "chef/dsl/recipe"
-require "chef/dsl/data_query"
-require "chef/dsl/platform_introspection"
-require "chef/dsl/include_recipe"
-require "chef/dsl/registry_helper"
-require "chef/dsl/reboot_pending"
-require "chef/dsl/audit"
-require "chef/dsl/powershell"
-
 require "chef/mixin/from_file"
-
 require "chef/mixin/deprecation"
 
 class Chef
