@@ -13,6 +13,10 @@ task default: :spec
 #
 # "rake update" updates the copied_from_chef files so we can grab bugfixes or new features
 #
+GLOBAL_MONKEYPATCHES = %w(
+                chef/runner
+)
+
 CHEF_FILES = %w(
                 chef/constants
                 chef/delayed_evaluator
@@ -36,7 +40,7 @@ CHEF_FILES = %w(
                 chef/resource/apt_update
                 chef/resource/apt_repository
                 chef/resource_builder
-              )
+)
 SPEC_FILES = %w(
                 unit/mixin/properties_spec.rb
                 unit/property_spec.rb
@@ -45,7 +49,7 @@ SPEC_FILES = %w(
                 integration/recipes/resource_action_spec.rb
                 integration/recipes/resource_converge_if_changed_spec.rb
                 integration/recipes/resource_load_spec.rb
-             )
+)
 KEEP_FUNCTIONS = {
   'chef/resource' => %w(
     initialize
@@ -221,6 +225,15 @@ task :update do
       FileUtils.mkdir_p(File.dirname(target_file))
       File.open(target_file, "w") { |f| f.write(output.string) }
     end
+  end
+
+  GLOBAL_MONKEYPATCHES.each do |file|
+    source_file = File.join(chef_gem_path, 'lib', "#{file}.rb")
+    target_path = File.expand_path("../files/lib/chef_compat/monkeypatches", __FILE__)
+    target_file = File.join(target_path, "#{file}.rb")
+    puts "Writing #{target_file} ..."
+    FileUtils.mkdir_p(File.dirname(target_file))
+    FileUtils.cp(source_file, target_file)
   end
 
   # SPEC_FILES.each do |file|
