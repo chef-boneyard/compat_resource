@@ -19,6 +19,8 @@ describe "compat_resource cookbook" do
                  File.join(cookbooks_path, 'hybrid'))
     File.symlink(File.expand_path('../data/cookbooks/notifications', __FILE__),
                  File.join(cookbooks_path, 'notifications'))
+    File.symlink(File.expand_path('../data/cookbooks/before', __FILE__),
+                 File.join(cookbooks_path, 'before'))
     File.symlink(File.expand_path('../data/cookbooks/cloning', __FILE__),
                  File.join(cookbooks_path, 'cloning'))
   end
@@ -37,6 +39,11 @@ describe "compat_resource cookbook" do
       shell_out!("bundle exec chef-client -c #{File.join(chef_repo_path, 'config.rb')} -F doc #{args}",
                  environment: { 'BUNDLE_GEMFILE' => File.expand_path('../data/Gemfile', __FILE__) })
     end
+  end
+
+  it "should work with before notifications" do
+    result = run_chef("-o before")
+    expect(result.stdout).to match(/.*INFO: log\[the notify\] running why-run write action to support before action.*INFO: the notify.*INFO: before.*INFO: the notify.*/m)
   end
 
   it "should handle new-style recursive notifications" do
