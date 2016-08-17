@@ -32,7 +32,7 @@ matrix:
       rvm: 2.1.10
     - env: "GEMFILE_MOD=\"gem 'chef', '~> 12.8.0'\""
       rvm: 2.1.10
-    - env: "GEMFILE_MOD=\"ruby '2.0.0-p648'; gem 'chef', '~> 12.7.0'\""
+    - env: "GEMFILE_MOD=\"ruby '2.0.0'; gem 'chef', '~> 12.7.0'\""
       rvm: 2.0.0-p648
     - env: "GEMFILE_MOD=\"gem 'chef', '~> 12.6.0'; gem 'chef-zero', '< 4.6'; gem 'ffi-yajl', '< 2.3'; gem 'chef-api', '< 0.7'; gem 'ohai', '< 8.18'\""
       rvm: 2.0.0-p648
