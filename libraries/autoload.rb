@@ -10,7 +10,4 @@ if Gem.loaded_specs["compat_resource"]
   Chef.log_deprecation "using compat_resource as a gem is deprecated;  please update cheffish and chef-provisioning gems (or use the latest Chef/ChefDK packages) or else manually pin your compat_resource cookbook version to the same version as the gem you are using to remove this warning"
 end
 
-require_relative '../files/lib/compat_resource/gemspec'
-CompatResource::GEMSPEC.activate
-
 require 'compat_resource'
