@@ -12,7 +12,7 @@ script:
   - bundle install --jobs=3 --retry=3
   - bundle exec rake spec
 
-env: "GEMFILE_MOD=\"gem 'chef', '~> 12.13'\""
+env: "GEMFILE_MOD=\"gem 'chef', '~> 12.12.0'\""
 
 # The set of Rubies Chef works with
 rvm:
