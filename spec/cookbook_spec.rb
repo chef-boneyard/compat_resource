@@ -23,6 +23,8 @@ describe "compat_resource cookbook" do
                  File.join(cookbooks_path, 'before'))
     File.symlink(File.expand_path('../data/cookbooks/cloning', __FILE__),
                  File.join(cookbooks_path, 'cloning'))
+    File.symlink(File.expand_path('../data/cookbooks/unmodified', __FILE__),
+                 File.join(cookbooks_path, 'unmodified'))
   end
 
   require 'chef/mixin/shell_out'
@@ -50,6 +52,14 @@ describe "compat_resource cookbook" do
     result = run_chef("-o notifications")
     puts result.stdout
     puts result.stderr
+  end
+
+  it "should definitely run a bunch of resources if we don't depend on compat_resource" do
+    result = run_chef("-o unmodified")
+  end
+
+  it "should run a bunch of resources in a mixed-run" do
+    result = run_chef("-o unmodified,test")
   end
 
   it "should not clone resources from the outer run context" do
