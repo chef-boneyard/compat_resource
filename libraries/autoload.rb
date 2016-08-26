@@ -13,7 +13,10 @@ end
 require_relative './chef_upstream_version'
 
 # on any chef client later than the one we were based off of we just turn into a no-op
-if Gem::Requirement.new("< #{ChefCompat.CHEF_UPSTREAM_VERSION}").satisfied_by?(Gem::Version.new(Chef::VERSION))
+if Gem::Requirement.new("< #{ChefCompat::CHEF_UPSTREAM_VERSION}").satisfied_by?(Gem::Version.new(Chef::VERSION))
+  Chef::Log.debug "loading compat_resource based on chef-version #{ChefCompat::CHEF_UPSTREAM_VERSION} over chef version #{Gem::Version.new(Chef::VERSION)}"
   $LOAD_PATH.unshift(File.expand_path("../files/lib", File.dirname(__FILE__)))
   require 'compat_resource'
+else
+  Chef::Log.debug "NOT LOADING compat_resource based on chef-version #{ChefCompat::CHEF_UPSTREAM_VERSION} over chef version #{Gem::Version.new(Chef::VERSION)}"
 end

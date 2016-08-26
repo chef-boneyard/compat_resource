@@ -270,8 +270,8 @@ task :update do
   # spit out the version somewhere we can easily slurp it up from
   File.open(File.expand_path("libraries/chef_upstream_version.rb", File.dirname(__FILE__)), "w") do |f|
     f.write <<-EOF
-        class ChefCompat
-          CHEF_UPSTREAM_VERSION=#{chef_gemspec.version}
+        module ChefCompat
+          CHEF_UPSTREAM_VERSION="#{chef_gemspec.version}"
         end
     EOF
   end
