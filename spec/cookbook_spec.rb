@@ -7,7 +7,7 @@ describe "compat_resource cookbook" do
   before do
     File.symlink(File.expand_path('../data/config.rb', __FILE__),
                  File.join(chef_repo_path, 'config.rb'))
-    File.symlink(File.expand_path('../../..', __FILE__),
+    File.symlink(File.expand_path('../..', __FILE__),
                  File.join(cookbooks_path, 'compat_resource'))
     File.symlink(File.expand_path('../data/cookbooks/test', __FILE__),
                  File.join(cookbooks_path, 'test'))
