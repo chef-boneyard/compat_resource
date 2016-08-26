@@ -1,6 +1,6 @@
 class Chef
   class RunContext
-    class ChildRunContext
+    class ChildRunContext < RunContext
       # magic that lets us re-parse the ChildRunContext without erroring due to
       # cheffish and chef-provisioning hooks having been loaded (on old versions of
       # chef-client without the lazy hooks for those gems)
