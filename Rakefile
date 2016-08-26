@@ -1,4 +1,3 @@
-require 'bundler/gem_tasks'
 require 'rspec/core/rake_task'
 require 'stove/rake_task'
 require 'fileutils'
@@ -267,6 +266,16 @@ task :update do
       File.open(target_file, "w") { |f| f.write(output.string) }
     end
   end
+
+  # spit out the version somewhere we can easily slurp it up from
+  File.open(File.expand_path("libraries/chef_upstream_version.rb", File.dirname(__FILE__)), "w") do |f|
+    f.write <<-EOF
+        module ChefCompat
+          CHEF_UPSTREAM_VERSION="#{chef_gemspec.version}"
+        end
+    EOF
+  end
+
 
   # SPEC_FILES.each do |file|
   #   target_path = File.expand_path("../files/spec/copied_from_chef", __FILE__)

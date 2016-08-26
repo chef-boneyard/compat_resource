@@ -14,6 +14,7 @@ test/tmp
 test/version_tmp
 tmp
 Gemfile.lock
+ci/chefspec/Gemfile.lock
 _Store
 *~
 *#

@@ -12,18 +12,18 @@ script:
   - bundle install --jobs=3 --retry=3
   - bundle exec rake spec
 
-env: "GEMFILE_MOD=\"gem 'chef', '~> 12.13'\""
+env: "GEMFILE_MOD=\"gem 'chef', '~> 12.12.0'\""
 
 # The set of Rubies Chef works with
 rvm:
   - 2.1
 
-# Add builds that work with specific chefs
-# 12.4 is not specifically included because the *default* version is "latest release"
 matrix:
   include:
-    - env: "GEMFILE_MOD=\"gem 'chef', github: 'chef/chef'\""
-      rvm: 2.3.1
+# since we no longer load anything on chef versions later than what we were created from, but since
+# the rspec tests in here all assume we're loaded, we can no longer usefully test against chef/chef master
+#    - env: "GEMFILE_MOD=\"gem 'chef', github: 'chef/chef'\""
+#      rvm: 2.3.1
     - env: "GEMFILE_MOD=\"gem 'chef', '~> 12.12.0'\""
       rvm: 2.1
     - env: "GEMFILE_MOD=\"gem 'chef', '~> 12.11.0'\""
@@ -50,6 +50,13 @@ matrix:
       rvm: 2.0
     - env: "GEMFILE_MOD=\"gem 'chef', '~> 12.0.3'; gem 'chef-zero', '< 4.6'; gem 'ffi-yajl', '< 2.3'; gem 'chef-api', '< 0.7'; gem 'ohai', '< 8.18'\""
       rvm: 2.0
+    - env: "GEMFILE_MOD=\"gem 'chef', '~> 12.12.0'\""
+      rvm: 2.1
+      gemfile: ci/chefspec/Gemfile
+      before_script:
+        - cd ci/chefspec
+      script:
+        - bundle exec rspec
 
 notifications:
   slack:
