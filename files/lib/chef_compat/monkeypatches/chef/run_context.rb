@@ -643,9 +643,6 @@ ERROR_MESSAGE
       CHILD_STATE = %w{
         audits
         audits=
-        cheffish
-        chef_metal
-        chef_provisioning
         create_child
         add_delayed_action
         delayed_actions
