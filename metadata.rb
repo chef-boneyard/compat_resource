@@ -7,6 +7,6 @@ long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 
 version '12.14.0'
 
-chef_version '>= 12.0' if respond_to?(:chef_version)
+chef_version '>= 12.1' if respond_to?(:chef_version)
 source_url 'https://github.com/chef-cookbooks/compat_resource'
 issues_url 'https://github.com/chef-cookbooks/compat_resource/issues'
