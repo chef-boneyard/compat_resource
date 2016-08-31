@@ -51,7 +51,7 @@ matrix:
     - env: "GEMFILE_MOD=\"gem 'chef', '~> 12.0.3'; gem 'chef-zero', '< 4.6'; gem 'ffi-yajl', '< 2.3'; gem 'chef-api', '< 0.7'; gem 'ohai', '< 8.18'\""
       rvm: 2.0
     - env: "GEMFILE_MOD=\"gem 'chef', '~> 12.12.0'\""
-      rvm: 2.1
+      rvm: 2.3.1
       gemfile: ci/chefspec/Gemfile
       before_script:
         - cd ci/chefspec
