@@ -1,5 +1,6 @@
 require 'rspec/core/rake_task'
 require 'stove/rake_task'
+require_relative 'tasks/maintainers'
 require 'fileutils'
 
 RSpec::Core::RakeTask.new(:spec) do |t|
