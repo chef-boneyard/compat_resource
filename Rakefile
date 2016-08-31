@@ -37,10 +37,12 @@ CHEF_FILES = %w(
                 chef/provider/apt_update
                 chef/provider/apt_repository
                 chef/provider/noop
+                chef/provider/yum_repository
                 chef/resource
                 chef/resource/action_class
                 chef/resource/apt_update
                 chef/resource/apt_repository
+                chef/resource/yum_repository
                 chef/resource_builder
 )
 SPEC_FILES = %w(
