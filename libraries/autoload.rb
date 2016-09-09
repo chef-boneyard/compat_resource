@@ -21,11 +21,9 @@ if Gem::Requirement.new("< #{ChefCompat::CHEF_UPSTREAM_VERSION}").satisfied_by?(
 else
   Chef::Log.debug "NOT LOADING compat_resource based on chef-version #{ChefCompat::CHEF_UPSTREAM_VERSION} over chef version #{Gem::Version.new(Chef::VERSION)}"
   module ChefCompat
-    class Resource < Chef::Resource
-    end
+    Resource = Chef::Resource
     module Mixin
-      module Properties < Chef::Mixin::Properties
-      end
+      Properties = Chef::Mixin::Properties
     end
   end
 end
