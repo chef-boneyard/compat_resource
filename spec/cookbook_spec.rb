@@ -19,6 +19,8 @@ describe "compat_resource cookbook" do
                  File.join(cookbooks_path, 'hybrid'))
     File.symlink(File.expand_path('../data/cookbooks/notifications', __FILE__),
                  File.join(cookbooks_path, 'notifications'))
+    File.symlink(File.expand_path('../data/cookbooks/strange_notifications', __FILE__),
+                 File.join(cookbooks_path, 'strange_notifications'))
     File.symlink(File.expand_path('../data/cookbooks/before', __FILE__),
                  File.join(cookbooks_path, 'before'))
     File.symlink(File.expand_path('../data/cookbooks/cloning', __FILE__),
@@ -52,6 +54,11 @@ describe "compat_resource cookbook" do
     result = run_chef("-o notifications")
     puts result.stdout
     puts result.stderr
+  end
+
+  it "should fix https://github.com/chef-cookbooks/compat_resource/issues/99" do
+    result = run_chef("-o strange_notifications::one")
+    expect(result.stdout).to match(/INFO: Processing log\[it worked\] action write/)
   end
 
   it "should definitely run a bunch of resources if we don't depend on compat_resource" do
