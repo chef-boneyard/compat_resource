@@ -9,6 +9,6 @@ cookbook_file filename do
 end
 
 log "it worked" do
-  subscribes :write, "file[filename]", :immediately
+  subscribes :write, "cookbook_file[#{filename}]", :immediately
   action :nothing
 end
