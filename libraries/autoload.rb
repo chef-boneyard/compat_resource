@@ -23,5 +23,9 @@ else
   module ChefCompat
     class Resource < Chef::Resource
     end
+    module Mixin
+      module Properties < Chef::Mixin::Properties
+      end
+    end
   end
 end
