@@ -1,5 +1,10 @@
 # compat_resource Cookbook CHANGELOG
+
 This file is used to list changes made in each version of the compat_resource cookbook.
+
+## 12.14.3 (2016-09-12)
+
+- Fix subscribes notifications
 
 ## 12.14.2 (2016-09-09)
 
@@ -12,4 +17,3 @@ This file is used to list changes made in each version of the compat_resource co
 - Update the minimum chef version in the metadata to 12.1
 - Added maintainers files
 - suppress constant redef warnings when running chefspec
-
