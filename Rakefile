@@ -46,15 +46,6 @@ CHEF_FILES = %w(
                 chef/resource/yum_repository
                 chef/resource_builder
 )
-SPEC_FILES = %w(
-                unit/mixin/properties_spec.rb
-                unit/property_spec.rb
-                unit/property/state_spec.rb
-                unit/property/validation_spec.rb
-                integration/recipes/resource_action_spec.rb
-                integration/recipes/resource_converge_if_changed_spec.rb
-                integration/recipes/resource_load_spec.rb
-)
 KEEP_FUNCTIONS = {
   'chef/resource' => %w(
     initialize
@@ -279,11 +270,4 @@ task :update do
         end
     EOF
   end
-
-
-  # SPEC_FILES.each do |file|
-  #   target_path = File.expand_path("../files/spec/copied_from_chef", __FILE__)
-  #   source_file = File.join(chef_gem_path, 'lib', "#{file}.rb")
-  #   target_file = File.join(target_path, "#{file}")
-  # end
 end
