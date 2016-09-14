@@ -6,5 +6,5 @@ gem 'rake'
 if ENV['GEMFILE_MOD']
   instance_eval(ENV['GEMFILE_MOD'])
 else
-  gem 'chef', '~> 12.3.0'
+  gem 'chef'
 end
