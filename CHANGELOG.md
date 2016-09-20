@@ -2,6 +2,18 @@
 
 This file is used to list changes made in each version of the compat_resource cookbook.
 
+## 12.14.6 (2016-09-20)
+
+- Update backported codebase to Chef 12.14.77 which brings in yum_repository updates and why-run enabled by default in custom resources
+
+## 12.14.5 (2016-09-19)
+
+- Prevent spamming messages in Chefspec runs for cookbooks that depend on compat_resource
+
+## 12.14.4 (2016-09-19)
+
+- Fix delayed notifications cloning
+
 ## 12.14.3 (2016-09-12)
 
 - Fix subscribes notifications
