@@ -9,6 +9,7 @@ This cookbook backports functionality introduced in the latest chef-client relea
 - [Custom Resources](https://docs.chef.io/custom_resources.html)
 - [apt_repository](https://docs.chef.io/resource_apt_repository.html)
 - [apt_update](https://docs.chef.io/resource_apt_update.html)
+- [systemd_unit](https://docs.chef.io/resource_systemd_unit.html)
 - [yum_repository](https://docs.chef.io/resource_yum_repository.html)
 - [:before notifications](https://docs.chef.io/resources.html#timers)
 
