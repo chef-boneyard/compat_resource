@@ -205,7 +205,6 @@ class Chef < (defined?(::Chef) ? ::Chef : Object)
           f.group "root"
           f.mode "0644"
           f.content new_resource.to_ini
-          f.verify systemd_analyze_cmd if systemd_analyze_path
         end.run_action(action)
       end
 
@@ -245,14 +244,6 @@ class Chef < (defined?(::Chef) ? ::Chef : Object)
           else
             {}
           end
-      end
-
-      def systemd_analyze_cmd
-        @systemd_analyze_cmd ||= "#{systemd_analyze_path} verify %{path}"
-      end
-
-      def systemd_analyze_path
-        @systemd_analyze_path ||= which("systemd-analyze")
       end
     end
   end
