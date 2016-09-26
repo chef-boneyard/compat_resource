@@ -85,7 +85,7 @@ class Chef < (defined?(::Chef) ? ::Chef : Object)
       property :options, Hash
 
       default_action :create
-      allowed_actions :create, :remove, :make_cache, :add, :delete
+      allowed_actions :create, :remove, :makecache, :add, :delete
 
       # provide compatibility with the yum cookbook < 3.0 properties
       alias_method :url, :baseurl
