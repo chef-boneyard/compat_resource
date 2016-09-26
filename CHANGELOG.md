@@ -2,6 +2,10 @@
 
 This file is used to list changes made in each version of the compat_resource cookbook.
 
+## 12.14.7 (2016-09-26)
+- Update to 12.14.89 Chef
+- Fix autoload by applying fix from #106
+
 ## 12.14.6 (2016-09-20)
 
 - Update backported codebase to Chef 12.14.77 which brings in yum_repository updates and why-run enabled by default in custom resources
