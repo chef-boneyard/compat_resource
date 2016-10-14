@@ -1,12 +1,28 @@
 sudo: false
+dist: trusty
+
+addons:
+  apt:
+    sources:
+      - chef-current-trusty
+    packages:
+      - chefdk
+
 language: ruby
+
 cache: bundler
+
+services: docker
 
 before_install:
   - bundle --version
   - gem --version
   - gem update --system
   - gem install bundler
+
+before_script:
+  - sudo iptables -L DOCKER || ( echo "DOCKER iptables chain missing" ; sudo iptables -N DOCKER )
+  - eval "$(/opt/chefdk/bin/chef shell-init bash)"
 
 script:
   - bundle install --jobs=3 --retry=3
