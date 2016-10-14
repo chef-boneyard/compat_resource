@@ -9,7 +9,9 @@ end
 
 Stove::RakeTask.new
 
-task default: [ :spec, :integration ]
+task default: :ci
+
+task ci: [ :spec, :integration ]
 
 #
 # "rake update" updates the copied_from_chef files so we can grab bugfixes or new features
