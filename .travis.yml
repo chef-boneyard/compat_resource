@@ -58,7 +58,7 @@ matrix:
       before_script:
         - cd ci/chefspec
       script:
-        - bundle exec rake ci
+        - bundle exec rspec
 
 notifications:
   slack:
