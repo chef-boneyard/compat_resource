@@ -1,14 +1,16 @@
 source 'https://rubygems.org'
 
 gem 'stove'
-gem 'rack', '< 2.0' # 2.0 requires Ruby 2.2+
 gem 'rspec'
 gem 'rake'
 gem 'tomlrb'
 gem 'test-kitchen'
-gem 'berkshelf', '< 5.0'  # 2.0 requires berkshelf < 5.0
 gem 'kitchen-dokken'
 gem 'kitchen-inspec'
+# gem pinning sadness due to ruby < 2.2.0
+gem 'berkshelf', '< 5.0'
+gem 'buff-extensions', '< 2.0'
+gem 'rack', '< 2.0'
 
 if ENV['GEMFILE_MOD']
   instance_eval(ENV['GEMFILE_MOD'])
