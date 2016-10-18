@@ -292,9 +292,9 @@ namespace :integration do
         f.puts "cookbook 'compat_resource', path: '#{my_root}'"
       end
       sh "rm -f Berksfile.lock"
-      sh "berks install"
+      sh "bundle exec berks install"
       ENV['KITCHEN_YAML']=".kitchen.docker.yml"
-      sh "kitchen test 1604"
+      sh "bundle exec kitchen test 1604"
     end
   end
 
