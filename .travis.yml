@@ -1,13 +1,6 @@
 sudo: false
 dist: trusty
 
-addons:
-  apt:
-    sources:
-      - chef-current-trusty
-    packages:
-      - chefdk
-
 language: ruby
 
 cache: bundler
