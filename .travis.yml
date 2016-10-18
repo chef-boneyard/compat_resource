@@ -15,10 +15,10 @@ cache: bundler
 services: docker
 
 before_install:
-  - bundle --version
-  - gem --version
   - gem update --system
+  - gem --version
   - gem install bundler
+  - bundle --version
 
 before_script:
   - sudo iptables -L DOCKER || ( echo "DOCKER iptables chain missing" ; sudo iptables -N DOCKER )
