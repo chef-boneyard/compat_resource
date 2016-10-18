@@ -7,6 +7,7 @@ gem 'tomlrb'
 gem 'test-kitchen'
 gem 'berkshelf'
 gem 'kitchen-dokken'
+gem 'kitchen-inspec'
 
 if ENV['GEMFILE_MOD']
   instance_eval(ENV['GEMFILE_MOD'])
