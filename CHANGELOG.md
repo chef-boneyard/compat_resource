@@ -2,6 +2,12 @@
 
 This file is used to list changes made in each version of the compat_resource cookbook.
 
+## 12.16.1 (2016-10-20)
+- add delayed_action helper
+
+## 12.16.0 (2016-10-19)
+- Sync chef-client changes from Chef 12.16.14
+
 ## 12.14.7 (2016-09-26)
 - Update to 12.14.89 Chef
 - Fix autoload by applying fix from #106
