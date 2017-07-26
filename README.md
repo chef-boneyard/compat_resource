@@ -33,9 +33,7 @@ To use this cookbook, put `depends 'compat_resource'` in the metadata.rb of your
 
 ## Custom Resources?
 
-Curious about how to use custom resources?
-
-See the [Chef custom resource docs](https://docs.chef.io/custom_resources.html).
+Curious about how to use custom resources? See the [Chef custom resource docs](https://docs.chef.io/custom_resources.html).
 
 ## License & Authors
 
