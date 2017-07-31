@@ -27,6 +27,12 @@ This cookbook backports functionality introduced in the latest chef-client relea
 
 - none
 
+## Discouragement Policy
+
+This repo is not necessarily deprecated, but its use is being discouraged.  Based on the policy in [RFC-092](https://github.com/chef/chef-rfc/blob/master/rfc092-dependency-update-cadence.md#cookbook-and-ecosystem-tooling-support) we now only support the prior 6 months of chef-client releases in current community cookbooks.  So as of Jul 2017 (for example) we only
+support back to chef-client 12.18.31.  Users are expected to track current versions of Chef 12/13 for current community cookbook support and within a 6 month window to migrate to
+new versions of chef-client.  As a result this cookbook is no longer viewed as being particularly necessary (and was always somewhat problematic).
+
 ## Usage
 
 To use this cookbook, put `depends 'compat_resource'` in the metadata.rb of your cookbook. Once this is done, you can use all the new custom resource features to define resources. It Just Works.
